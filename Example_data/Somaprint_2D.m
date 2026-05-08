@@ -28,7 +28,7 @@
 % User action 1: Go to your folder with in vivo & ex vivo ROIs and images
 % If using EXRTRACRT cell maps, just to Step 2
 
-[invivo_image,exvivo_image,invivo_ROI,exvivo_ROI]=AutoLoadfiles;
+[invivo_image,exvivo_image,invivo_ROI,exvivo_ROI]=AutoLoadFiles;
     
 % invivo_image='S1H1AVG_240um-zoom2-biColor_flip.tif';
 % exvivo_image='S1H1_confocal_slice2_match_invivo240.tif';
