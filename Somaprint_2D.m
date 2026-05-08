@@ -1,6 +1,4 @@
-% =================== Soma-print 2D, v1.2, 11 2025 =======================
-
-% Schnitzer Lab, Stanford University
+% =================== Soma-print 2D, v1.32, May 2026 =======================
 
 % Inroduction to Soma-print: A computational algorithm for large-scale automatic registration of in vivo cell maps to ex vivo cell
 % maps 
@@ -14,8 +12,16 @@
 % Output data:
 % Matched cell IDs (data_id_cellout1,data_id_cellout2)
 
-% Contact info for technical questions: TRUFACT.info@gmail.com; xcsun@stanford.edu
 
+% MATLAB tookbox that you may need (depending on your MATLAB version, so try install this if some functions are missing)
+% - Computer Vision Toolbox                             
+% - Image Processing Toolbox                              
+% - Signal Processing Toolbox                            
+% - Statistics and Machine Learning Toolbox  
+
+% =======================================================================
+% Schnitzer Lab, Stanford University
+% Contact info for technical questions: TRUFACT.info@gmail.com; Xiaochen Sun, xcsun@stanford.edu
 
 %% Step 1: generate maps from ImageJ
 
@@ -40,11 +46,14 @@
 
 %% Step 3: Soma-print, iterative agorith
 option=GetDefaultOption;
-option.pixellength=672/1024;  
+option.pixellength=672/1024;   % *Critical paremeter: um / pixel, adjust this according to your in vivo imaging data
 
 [score_weighted,id_map1,id_map2,score_raw]=Somaprint_Iterative (map1,map2_tform,option);
 
 %% Step 4: Plot final results: Statistics, output matched cell IDs
-figure(1);clf;plot_data=score_weighted;jjjj=1;iiii=length(plot_data); % 
-[id_output1,id_output2,output_sumamry,output_option]=Somaprint_ComputeMatchStatistics(plot_data{jjjj,iiii},map1,map2_tform,[],[],[],[],1);
-fprintf('Matched cells, post. prob.: %d, lr: %d, p-value: %d \n',sum(output_sumamry(:,4)<0.05),sum(output_sumamry(:,5)<0.05),sum(output_sumamry(:,6)<0.05));
+figure(1);clf;plot_data=score_weighted;jjjj=1;iiii=length(plot_data); plot_option=2; %
+[id_output1,id_output2,output_sumamry,output_option]=Somaprint_ComputeMatchStatistics(plot_data{jjjj,iiii},map1,map2_tform,[],[],[],[],plot_option);
+
+% id_output1: ID for in vivo cells matched
+% id_output2: ID for ex vivo cells matched
+% output_summary: cells ID with Somaprint scores, with 3 statistics: 1) post. probs, 2) Liklihood ratio, 3) p-value

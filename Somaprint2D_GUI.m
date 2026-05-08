@@ -29,7 +29,7 @@ refreshAll();
         s.pendingPair = [];
         s.pendingPairIndex = [];
         s.pendingSide = "invivo";
-        s.option = GetDefautOption();
+        s.option = GetDefaultOption();
         s.scoreWeighted = {};
         s.idMap1 = {};
         s.idMap2 = {};
@@ -89,6 +89,7 @@ refreshAll();
         a.browseOutputButton = [];
         a.saveWorkspaceCheck = [];
         a.exportMatButton = [];
+        a.exportFullMatButton = [];
         a.exportCsvButton = [];
         a.inspectStatus = [];
         a.inspectSummaryLabel = [];
@@ -456,7 +457,7 @@ refreshAll();
         exportPanel.Layout.Row = 2;
         exportPanel.Layout.Column = 2;
         eg = uigridlayout(exportPanel, [6, 2]);
-        eg.RowHeight = {32, 32, 32, 44, 22, 22};
+        eg.RowHeight = {32, 32, 32, 32, 44, 22};
         eg.ColumnWidth = {'1x', '1x'};
         eg.ColumnSpacing = 8;
 
@@ -478,13 +479,14 @@ refreshAll();
             'ButtonPushedFcn', @(~,~) exportMatches('csv'));
         app.exportCsvButton.Layout.Row = 3;
         app.exportCsvButton.Layout.Column = 2;
-        app.saveWorkspaceCheck = uicheckbox(eg, 'Text', 'Include workspace variables in .mat', ...
-            'Value', false);
-        app.saveWorkspaceCheck.Layout.Row = 5;
-        app.saveWorkspaceCheck.Layout.Column = [1 2];
+
+        app.exportFullMatButton = uibutton(eg, 'push', 'Text', 'Export full data (.mat)', ...
+            'ButtonPushedFcn', @(~,~) exportMatches('fullmat'));
+        app.exportFullMatButton.Layout.Row = 4;
+        app.exportFullMatButton.Layout.Column = [1 2];
 
         app.inspectStatus = uitextarea(eg, 'Editable', 'off');
-        app.inspectStatus.Layout.Row = 4;
+        app.inspectStatus.Layout.Row = 5;
         app.inspectStatus.Layout.Column = [1 2];
 
         app.inspectSummaryLabel = uilabel(eg, 'Text', 'No inspection results yet.');
@@ -891,7 +893,7 @@ refreshAll();
     end
 
     function option = collectSomaprintOptions()
-        option = GetDefautOption();
+        option = GetDefaultOption();
         optionNames = fieldnames(app.paramEdits);
         integerFields = {'nitermax', 'nitermin', 'n_vec1', 'n_vec2', 'n_vec3', 'method'};
         positiveFields = {'nitermax', 'nitermin', 'n_vec1', 'n_vec2', 'n_vec3', 'pixellength'};
@@ -1087,27 +1089,30 @@ refreshAll();
                 id_output2 = state.inspect.id2; %#ok<NASGU>
                 output_summary = state.inspect.outputSummary; %#ok<NASGU>
                 option_output = state.inspect.optionOutput; %#ok<NASGU>
-                if app.saveWorkspaceCheck.Value
-                    map1 = state.map1; %#ok<NASGU>
-                    map2 = state.map2; %#ok<NASGU>
-                    map2_tform = state.map2Tform; %#ok<NASGU>
-                    tform = state.tform; %#ok<NASGU>
-                    fp = state.anchorPairs(:, 1:2); %#ok<NASGU>
-                    mp = state.anchorPairs(:, 3:4); %#ok<NASGU>
-                    option = state.option; %#ok<NASGU>
-                    image1 = state.image1; %#ok<NASGU>
-                    image2 = state.image2; %#ok<NASGU>
-                    image2_tform = state.image2Tform; %#ok<NASGU>
-                    score_weighted = state.scoreWeighted; %#ok<NASGU>
-                    id_map1 = state.idMap1; %#ok<NASGU>
-                    id_map2 = state.idMap2; %#ok<NASGU>
-                    score_raw = state.scoreRaw; %#ok<NASGU>
-                    save(filePath, 'id_output1', 'id_output2', 'output_summary', 'option_output', ...
-                        'map1', 'map2', 'map2_tform', 'tform', 'fp', 'mp', 'option', ...
-                        'image1', 'image2', 'image2_tform', 'score_weighted', 'id_map1', 'id_map2', 'score_raw');
-                else
-                    save(filePath, 'id_output1', 'id_output2', 'output_summary', 'option_output');
-                end
+                save(filePath, 'id_output1', 'id_output2', 'output_summary', 'option_output');
+            case 'fullmat'
+                filePath = fullfile(state.outputFolder, 'somaprint_full_data.mat');
+                id_output1 = state.inspect.id1; %#ok<NASGU>
+                id_output2 = state.inspect.id2; %#ok<NASGU>
+                output_summary = state.inspect.outputSummary; %#ok<NASGU>
+                option_output = state.inspect.optionOutput; %#ok<NASGU>
+                map1 = state.map1; %#ok<NASGU>
+                map2 = state.map2; %#ok<NASGU>
+                map2_tform = state.map2Tform; %#ok<NASGU>
+                tform = state.tform; %#ok<NASGU>
+                fp = state.anchorPairs(:, 1:2); %#ok<NASGU>
+                mp = state.anchorPairs(:, 3:4); %#ok<NASGU>
+                option = state.option; %#ok<NASGU>
+                image1 = state.image1; %#ok<NASGU>
+                image2 = state.image2; %#ok<NASGU>
+                image2_tform = state.image2Tform; %#ok<NASGU>
+                score_weighted = state.scoreWeighted; %#ok<NASGU>
+                id_map1 = state.idMap1; %#ok<NASGU>
+                id_map2 = state.idMap2; %#ok<NASGU>
+                score_raw = state.scoreRaw; %#ok<NASGU>
+                save(filePath, 'id_output1', 'id_output2', 'output_summary', 'option_output', ...
+                    'map1', 'map2', 'map2_tform', 'tform', 'fp', 'mp', 'option', ...
+                    'image1', 'image2', 'image2_tform', 'score_weighted', 'id_map1', 'id_map2', 'score_raw');
             case 'csv'
                 filePath = fullfile(state.outputFolder, 'output_summary.csv');
                 outputSummary = state.inspect.outputSummary;
@@ -1319,6 +1324,7 @@ refreshAll();
     function refreshInspectionPage()
         app.outputFolderEdit.Value = state.outputFolder;
         app.exportMatButton.Enable = onOff(state.inspect.isReady);
+        app.exportFullMatButton.Enable = onOff(state.inspect.isReady);
         app.exportCsvButton.Enable = onOff(state.inspect.isReady);
         if ~state.inspect.isReady
             app.matchTable.Data = cell(0,4);

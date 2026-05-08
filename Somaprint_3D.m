@@ -1,8 +1,10 @@
+% =================== Soma-print 2D, v1.32, May 2026 =======================
 
-%% Soma-print 3D, V1.2, Nov 2025
+% Registration of in vivo cell maps to z-stack ex vivo dataset
 
 % Schnitzer Lab, Stanford University
-% Contact info for technical questions: TRUFACT.info@gmail.com; xcsun@stanford.edu
+% Contact info for technical questions: TRUFACT.info@gmail.com; Xiaochen Sun, xcsun@stanford.edu
+
 %% ============== Step 1: Loading in vivo images ahd ROIs ========================================
 
 % Read in vivo image and ROI
@@ -31,7 +33,7 @@ end
 
 %% Step 2: Affine transformtaion
 
-jjjj=11; % Choose one of the central z-stackes 
+jjjj=11; % Choose one of the central z-stack 
 [mp,fp] = cpselect(normimage(image2{jjjj},1),normimage(image1,1),Wait=true);
 
 %% (continued) apply affine transformationn to all ex vivo images and maps
@@ -45,8 +47,8 @@ end
 
 %% Step 3: Soma-print for individual planes
 
-option=GetDefautOption(3);
-option.pixellength=672/512; 
+option=GetDefaultOption(3);
+option.pixellength=672/512;  % *Critical paremeter: um / pixel, adjust this according to your in vivo imaging data
 
 for jjjj=1:length(centroid2_tform);
   if isempty(centroid2_tform{jjjj})==1;continue;end
@@ -56,15 +58,14 @@ end
 
 
 %% (continued) Checking individual planes: plotting results
-clf;jjjj=15;method=2;p_cutoff=0.05;iiii=length(score_weighted_3D{jjjj}); % 
+jjjj=15; % Choose the individual plane that you want to see the results
+clf;method=2;p_cutoff=0.05;iiii=length(score_weighted_3D{jjjj}); % 
 [id_output1,id_output2,output_sumamry,output_option]=Somaprint_ComputeMatchStatistics(score_weighted_3D{jjjj}{iiii},centroid1,centroid2_tform{jjjj},method,p_cutoff,option.lambda,option.gmmfilter,2);
 
 %% Step 4: 3D processing acorss planes
-
 [id_output3D,data_idz,data_globalmapscore]=Somaprint_Process3DSomaprint(centroid1,centroid2_tform,score_weighted_3D,option.lambda,option.gmmfilter)
 
 %% Step 5: Reconstruct ex vivo images
-
 image_reconstruct=Somaprint_ReconstructCurvedManifold(centroid1,id_output3D,data_idz,image1,image2_tform);
 
 
