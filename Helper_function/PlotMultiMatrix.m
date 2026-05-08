@@ -2,9 +2,14 @@ function PlotMultiMatrix(varargin);
 
 % 3: 3 states color
 % 4: 3 states color, figure plot
-% 9: grey, red, blue
 
-    plot_option=0;
+% 9: grey, red, blue
+% 10: grey, red
+
+plot_lw=3;
+plot_option=0;
+plot_msize=10;
+    
 % Just to plot a bar graph, normally used for decoder evaluation 
     [~,n]=size(varargin);
     count=1;
@@ -33,17 +38,22 @@ function PlotMultiMatrix(varargin);
 % Just to plot a bar graph, normally used for decoder evaluation
     n_group=length(x);
     n=length(x)*n_temp;
-    
+    y=cell(n,1);
     for i=1:length(x);
         x_temp=x{i};
         x_temp=squeeze(x_temp);    
         [m(i),~]=size(x_temp);
         X_mean(i:length(x):n)=mean(x_temp,1);
-        X_sem(i:length(x):n)=std(x_temp,1)/sqrt(m(i));
-        %if m(i)==1;X_sem(i,:)=zeros([1,n_temp(i)]);end
-        
+        X_sem(i:length(x):n)=std(x_temp,1)/sqrt(m(i));  
+        %if m(i)==1;X_sem(i,:)=zeros([1,n_temp(i)]);end    
     end
-
+    
+    for i=1:n;   
+        idx=mod(i,n_group);
+        if idx==0;idx=n_group;end
+        y{i}= x{idx}(:,ceil(i/n_group));
+    end
+    
     if plot_option==0;plot_color=[0.85 0.85 0.85];%plot_color=[0.2 0.7 0.2];
         b=bar(X_mean,'FaceColor',plot_color,'LineWidth',1.5);hold on;  
         errorbar(X_mean,X_sem,'.k','CapSize',5,'LineWidth',2);
@@ -74,7 +84,7 @@ function PlotMultiMatrix(varargin);
     end
     
     if plot_option==3;
-        color_set=[0.3 0.3 0.3;.5 0.5 0.5;0 .8 0];
+        color_set=[0.5 0.5 0.5;.7 0.7 0.7;0.75 0 0];
         bar_width=1;
         bar_x=[];
         l_bar=2;
@@ -92,16 +102,18 @@ function PlotMultiMatrix(varargin);
         b.FaceColor = 'flat';
         for i=1:n;
             if mod (i,n_group)==1;
-                    b.CData(i,:) =[.1 .1 .1];
+                    b.CData(i,:) =color_set(1,:);
             else if mod (i,n_group)==2;
-                    b.CData(i,:) =[0.7 0.7 0.7];%[.65 .2 .65];
+                    b.CData(i,:) = color_set(2,:);%[.65 .2 .65];
                 else mod (i,n_group)==0;
-                    b.CData(i,:) =[0 0.7 0];
+                    b.CData(i,:) =color_set(3,:);
                 end
                                    
             end
             %b.CData(i,:) =color_set(i,:);
-        end
+            plot(bar_x(i)+(rand([size(x{i},1),1])-0.5)/3,x{i}','.','Color',[.1 .1 .1],'LineWidth',1,'MarkerSize',plot_msize);hold on;
+
+         end
         errorbar(bar_x,X_mean,X_sem,'.k','CapSize',5,'LineWidth',1.5);
         %ylabel('Decoding accuracy(%)');%yticks([0 25 50 75 100])%;ylim([0 100]);
         xticks([]);
@@ -111,7 +123,7 @@ function PlotMultiMatrix(varargin);
     end
     
     if plot_option==4;
-        color_set=[0.3 0.3 0.3;.5 0.5 0.5;0 .8 0];
+        color_set=[0.3 0.3 0.3;.5 0.5 0.5;0.75 0 0];
         bar_width=1;
         bar_x=[];
         l_bar=2;
@@ -214,7 +226,9 @@ function PlotMultiMatrix(varargin);
     
     
     if plot_option==9;
-        color_set=[0.75 0.75 0.75;.95 0.7 0.7;0.45 0.45 0.45;0.75 0 0];
+        plot_color = [.75 0.3 0.3; 0.3 0.3 .75; .6 .6 .6];
+        plot_lw=2;
+        plot_msize=15;
         bar_width=1;
         bar_x=[];
         l_bar=2;
@@ -228,7 +242,44 @@ function PlotMultiMatrix(varargin);
                 end
             end
          end
-        b=bar(bar_x,X_mean,bar_width,'w','LineWidth',1.5);hold on;
+        b=bar(bar_x,X_mean,bar_width,'w','LineWidth',plot_lw);hold on;
+        b.FaceColor = 'flat';
+        for i=1:n;
+            if mod (i,n_group)==1;
+                    b.CData(i,:) =plot_color(1,:);%[.9 .9 .9];
+            else if mod (i,n_group)==2;
+                    b.CData(i,:) = plot_color(2,:);%[0.8 0 0];%[.65 .2 .65];
+                else mod (i,n_group)==0;
+                    b.CData(i,:) =plot_color(3,:);;%[0 0 .6];
+                end
+                                   
+            end
+            plot(bar_x(i)+(rand([size(y{i},1),1])-0.5)/1.5,y{i},'.','Color',[.2 .2 .2],'LineWidth',1,'MarkerSize',plot_msize);hold on;
+         end
+        errorbar(bar_x,X_mean,X_sem,'.k','CapSize',10,'LineWidth',plot_lw);
+       
+        xticks([]);
+        xL = get(gca,'XLim');set(gca,'box','off'); set(gca,'FontSize',25,'LineWidth',plot_lw);
+        %line(xL,[50 50],'Color','k','LineStyle','--');
+        hold off; 
+    end
+     
+     if plot_option==10;
+        color_set=[0.75 0.75 0.75;0.75 0 0];
+        bar_width=1;
+        bar_x=[];
+        l_bar=2.65;
+        for i=1:n;
+            if mod (i,n_group)==1;
+                bar_x(i)=i*l_bar+0.5;
+            else if mod (i,n_group)==2;
+                    bar_x(i)=i*l_bar;
+                else
+                    bar_x(i)=i*l_bar-0.5;
+                end
+            end
+         end
+        b=bar(bar_x,X_mean,bar_width,'w','LineWidth',plot_lw);hold on;
         b.FaceColor = 'flat';
         for i=1:n;
             if mod (i,n_group)==1;
@@ -236,20 +287,48 @@ function PlotMultiMatrix(varargin);
             else if mod (i,n_group)==2;
                     b.CData(i,:) =[0.8 0 0];%[.65 .2 .65];
                 else mod (i,n_group)==0;
-                    b.CData(i,:) =[0 0 .6];
+                    b.CData(i,:) =[0.8  0 0];
                 end
                                    
             end
             %b.CData(i,:) =color_set(i,:);
+            plot(bar_x(i)+(rand([size(y{i},1),1])-0.5)/4,y{i},'.','Color',[.2 .2 .2],'LineWidth',1,'MarkerSize',plot_msize);hold on;
          end
-        errorbar(bar_x,X_mean,X_sem,'.k','CapSize',5,'LineWidth',1.5);
+        errorbar(bar_x,X_mean,X_sem,'.k','CapSize',5,'LineWidth',plot_lw);
         %ylabel('Decoding accuracy(%)');%yticks([0 25 50 75 100])%;ylim([0 100]);
         xticks([]);
-        xL = get(gca,'XLim');set(gca,'box','off'); set(gca,'FontSize',20,'LineWidth',1.5);
+        xL = get(gca,'XLim');set(gca,'box','off'); set(gca,'FontSize',20,'LineWidth',plot_lw);
         %line(xL,[50 50],'Color','k','LineStyle','--');
         hold off; 
-    end
-     
+     end
+    
+      if plot_option==11;
+        color_set=[.9 .9 .9;.75 0 0;0 0 .75;.75 .55 0;.5 .5 .5;.7 .7 .7];        
+        plot_lw=2;
+        bar_width=1;
+        bar_x=[];
+        l_bar=2;
+        for i=1:n;
+            id=mod (i,n_group); if id==0;id=4;end;
+            bar_x(i)=i*l_bar-id*0.5;     
+         end
+        b=bar(bar_x,X_mean,bar_width,'w','LineWidth',plot_lw);hold on;
+        b.FaceColor = 'flat';
+        for i=1:n;
+            id=mod (i,n_group);
+            if id==0;id=4;end;
+            b.CData(i,:) =color_set(id,:);      
+ 
+            %b.CData(i,:) =color_set(i,:);
+         end
+        errorbar(bar_x,X_mean,X_sem,'.k','CapSize',5,'LineWidth',plot_lw);
+        %ylabel('Decoding accuracy(%)');%yticks([0 25 50 75 100])%;ylim([0 100]);
+        xticks([]);
+        xL = get(gca,'XLim');set(gca,'box','off'); set(gca,'FontSize',20,'LineWidth',plot_lw);
+        %line(xL,[50 50],'Color','k','LineStyle','--');
+        hold off; 
+    end 
+      
      
     xticks([]);
     xL = get(gca,'XLim');set(gca,'FontSize',18);

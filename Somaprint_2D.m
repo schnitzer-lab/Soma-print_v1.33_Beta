@@ -1,7 +1,6 @@
 % =================== Soma-print 2D, v1.2, 11 2025 =======================
 
 % Schnitzer Lab, Stanford University
-% Xiaochen Sun, xcsun@stanford.edu
 
 % Inroduction to Soma-print: A computational algorithm for large-scale automatic registration of in vivo cell maps to ex vivo cell
 % maps 
@@ -15,7 +14,7 @@
 % Output data:
 % Matched cell IDs (data_id_cellout1,data_id_cellout2)
 
-% Contact info for technical questions: xcsun@stanford.edu
+% Contact info for technical questions: TRUFACT.info@gmail.com; xcsun@stanford.edu
 
 
 %% Step 1: generate maps from ImageJ
@@ -25,27 +24,23 @@
 
 [invivo_image,exvivo_image,invivo_ROI,exvivo_ROI]=AutoLoadfiles;
     
-invivo_image='S1H1AVG_240um-zoom2-biColor_flip.tif';
-exvivo_image='S1H1_confocal_slice2_match_invivo240.tif';
-invivo_ROI = 'S1H1AVG_240um-zoom2-biColor_flip_RoiSet676.zip';
-exvivo_ROI='S1H1_confocal_slice2_match_invivo240-ROIset_extra3 all DAPI.zip';
-
-
-% User action 2: add Somaprint package to search path
-%addpath(genpath('E:\Matlab_code\Somaprint_v1.2'));
+% invivo_image='S1H1AVG_240um-zoom2-biColor_flip.tif';
+% exvivo_image='S1H1_confocal_slice2_match_invivo240.tif';
+% invivo_ROI = 'S1H1AVG_240um-zoom2-biColor_flip_RoiSet676.zip';
+% exvivo_ROI='S1H1_confocal_slice2_match_invivo240-ROIset_extra3 all DAPI.zip'; 
 
 % Generate scaled map2 (ex vivo) and scaled map1 (in vivo)
 [map1,map2,image1,image2]=Somaprint_GenerateMap(invivo_image,exvivo_image,invivo_ROI,exvivo_ROI);
 
 %% Step 2: Mannual anchor cells for pre-alignment
 
-%  User action 3: Select >=5 anchor points, and then close the window 
+%  User action 3: Select >=3 anchor points, and then close the window 
 [tform,map2_tform,image2_tform]=Somaprint_MannualTransformation(image1,image2,map1,map2);
 
 
 %% Step 3: Soma-print, iterative agorith
-option=GetDefautOption;
-option.pixellength=716/1024;  option.lambda=1;option.ir1st=0.1; option.n_vec2=6;% PRISM 2
+option=GetDefaultOption;
+option.pixellength=672/1024;  
 
 [score_weighted,id_map1,id_map2,score_raw]=Somaprint_Iterative (map1,map2_tform,option);
 

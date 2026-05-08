@@ -417,8 +417,8 @@ refreshAll();
         app.page4 = uipanel(app.pageStack, 'BorderType', 'none', ...
             'Units', 'normalized', 'Position', [0 0 1 1], 'Visible', 'off');
         grid = uigridlayout(app.page4, [2, 3]);
-        grid.RowHeight = {'3.0x', '1x'};
-        grid.ColumnWidth = {'1x', '1x', '1x'};
+        grid.RowHeight = {'2.9x', 210};
+        grid.ColumnWidth = {'1x', '1.28x', '1.12x'};
         grid.Padding = [0 0 0 0];
         grid.RowSpacing = 10;
         grid.ColumnSpacing = 10;
@@ -426,27 +426,20 @@ refreshAll();
         visualPanel = uipanel(grid, 'Title', 'Match Statistics');
         visualPanel.Layout.Row = 1;
         visualPanel.Layout.Column = [1 3];
-        vg = uigridlayout(visualPanel, [2, 4]);
-        vg.RowHeight = {'2.8x', '1.5x'};
-        vg.ColumnWidth = {'0.9x', '1.15x', '1.15x', '1.15x'};
+        vg = uigridlayout(visualPanel, [2, 3]);
+        vg.RowHeight = {'1x', '1x'};
+        vg.ColumnWidth = {'1x', '1x', '1x'};
         vg.RowSpacing = 8;
         vg.ColumnSpacing = 8;
 
         for idx = 1:6
             app.inspectAxes(idx) = uiaxes(vg);
-            switch idx
-                case 2
-                    app.inspectAxes(idx).Layout.Row = 1;
-                    app.inspectAxes(idx).Layout.Column = [1 2];
-                case 3
-                    app.inspectAxes(idx).Layout.Row = 1;
-                    app.inspectAxes(idx).Layout.Column = [3 4];
-                case 1
-                    app.inspectAxes(idx).Layout.Row = 2;
-                    app.inspectAxes(idx).Layout.Column = 1;
-                otherwise
-                    app.inspectAxes(idx).Layout.Row = 2;
-                    app.inspectAxes(idx).Layout.Column = idx - 2;
+            if idx <= 3
+                app.inspectAxes(idx).Layout.Row = 1;
+                app.inspectAxes(idx).Layout.Column = idx;
+            else
+                app.inspectAxes(idx).Layout.Row = 2;
+                app.inspectAxes(idx).Layout.Column = idx - 3;
             end
             showPlaceholder(app.inspectAxes(idx), sprintf('Panel %d', idx));
         end
@@ -456,39 +449,54 @@ refreshAll();
         tablePanel.Layout.Column = 1;
         tg = uigridlayout(tablePanel, [1,1]);
         app.matchTable = uitable(tg, ...
-            'ColumnName', {'id_output1', 'id_output2'}, ...
-            'ColumnEditable', false(1,2));
+            'ColumnName', {'id_output1', 'id_output2', 'somaprint_score', 'posterior_probability'}, ...
+            'ColumnEditable', false(1,4));
 
         exportPanel = uipanel(grid, 'Title', 'Export');
         exportPanel.Layout.Row = 2;
         exportPanel.Layout.Column = 2;
-        eg = uigridlayout(exportPanel, [7, 1]);
-        eg.RowHeight = {32, 32, 32, 32, 32, '1x', 32};
+        eg = uigridlayout(exportPanel, [6, 2]);
+        eg.RowHeight = {32, 32, 32, 44, 22, 22};
+        eg.ColumnWidth = {'1x', '1x'};
+        eg.ColumnSpacing = 8;
 
         app.browseOutputButton = uibutton(eg, 'push', 'Text', 'Browse Output Folder', ...
             'ButtonPushedFcn', @(~,~) browseOutputFolder());
+        app.browseOutputButton.Layout.Row = 1;
+        app.browseOutputButton.Layout.Column = [1 2];
 
         app.outputFolderEdit = uieditfield(eg, 'text', 'Editable', 'off', ...
             'Value', state.outputFolder);
+        app.outputFolderEdit.Layout.Row = 2;
+        app.outputFolderEdit.Layout.Column = [1 2];
 
         app.exportMatButton = uibutton(eg, 'push', 'Text', 'Export results (.mat)', ...
             'ButtonPushedFcn', @(~,~) exportMatches('mat'));
+        app.exportMatButton.Layout.Row = 3;
+        app.exportMatButton.Layout.Column = 1;
         app.exportCsvButton = uibutton(eg, 'push', 'Text', 'Export output_summary (.csv)', ...
             'ButtonPushedFcn', @(~,~) exportMatches('csv'));
+        app.exportCsvButton.Layout.Row = 3;
+        app.exportCsvButton.Layout.Column = 2;
         app.saveWorkspaceCheck = uicheckbox(eg, 'Text', 'Include workspace variables in .mat', ...
             'Value', false);
+        app.saveWorkspaceCheck.Layout.Row = 5;
+        app.saveWorkspaceCheck.Layout.Column = [1 2];
 
         app.inspectStatus = uitextarea(eg, 'Editable', 'off');
-        app.inspectStatus.Layout.Row = 6;
+        app.inspectStatus.Layout.Row = 4;
+        app.inspectStatus.Layout.Column = [1 2];
 
         app.inspectSummaryLabel = uilabel(eg, 'Text', 'No inspection results yet.');
-        app.inspectSummaryLabel.Layout.Row = 7;
+        app.inspectSummaryLabel.FontSize = 11;
+        app.inspectSummaryLabel.Layout.Row = 6;
+        app.inspectSummaryLabel.Layout.Column = [1 2];
 
         logoPanel = uipanel(grid, 'Title', 'Logo');
         logoPanel.Layout.Row = 2;
         logoPanel.Layout.Column = 3;
         lg2 = uigridlayout(logoPanel, [1, 1]);
-        lg2.Padding = [12 12 12 12];
+        lg2.Padding = [6 6 6 6];
         app.logoAxesInspect = uiaxes(lg2);
         app.logoAxesInspect.Toolbar.Visible = 'off';
         renderLogoOnAxes(app.logoAxesInspect);
@@ -984,7 +992,7 @@ refreshAll();
             state.completedStep = max(state.completedStep, 4);
 
             renderInspectionPanelsGUI(finalMatrix);
-            setStatus(sprintf('Inspection results generated from iteration %d.', finalIter));
+            setStatus(buildInspectionSummaryText());
             ok = true;
         catch ME
             state.inspect = emptyInspectState();
@@ -1313,25 +1321,65 @@ refreshAll();
         app.exportMatButton.Enable = onOff(state.inspect.isReady);
         app.exportCsvButton.Enable = onOff(state.inspect.isReady);
         if ~state.inspect.isReady
-            app.matchTable.Data = cell(0,2);
+            app.matchTable.Data = cell(0,4);
             app.inspectSummaryLabel.Text = 'No inspection results yet.';
             app.inspectStatus.Value = {'Step 4 populates automatically from the final Soma-print iteration.'};
             clearInspectionAxes();
         else
-            app.matchTable.Data = [num2cell(state.inspect.id1(:)), num2cell(state.inspect.id2(:))];
+            app.matchTable.Data = buildMatchTableData();
             nMatched = numel(state.inspect.id1);
             nMap1 = size(state.map1, 3);
             nMap2 = size(state.map2Tform, 3);
             if nMap1 > 0
                 percentMatched = 100 * nMatched / nMap1;
-                app.inspectSummaryLabel.Text = sprintf('Somaprint completed: Matched cells: %d/%d , Percent: %.4f, ex vivo: %d', ...
-                    nMatched, nMap1, percentMatched, nMap2);
+                app.inspectSummaryLabel.Text = sprintf('Matched cells: %d/%d   Ex vivo: %d', nMatched, nMap1, nMap2);
             else
-                app.inspectSummaryLabel.Text = sprintf('Somaprint completed: Matched cells: %d, ex vivo: %d', nMatched, nMap2);
+                app.inspectSummaryLabel.Text = sprintf('Matched cells: %d   Ex vivo: %d', nMatched, nMap2);
             end
             app.inspectStatus.Value = { ...
                 sprintf('Results built from final iteration %d.', state.inspect.finalIter), ...
                 'Export output_summary (.csv) or the full MATLAB results bundle (.mat).'};
+            if state.currentStep == 4
+                app.statusLabel.Text = buildInspectionSummaryText();
+            end
+        end
+    end
+
+    function txt = buildInspectionSummaryText()
+        nMatched = numel(state.inspect.id1);
+        nMap1 = size(state.map1, 3);
+        nMap2 = size(state.map2Tform, 3);
+        if nMap1 > 0
+            percentMatched = 100 * nMatched / nMap1;
+            txt = sprintf('Somaprint completed: Matched cells: %d/%d , Percent: %.4f, ex vivo: %d', ...
+                nMatched, nMap1, percentMatched, nMap2);
+        else
+            txt = sprintf('Somaprint completed: Matched cells: %d, ex vivo: %d', nMatched, nMap2);
+        end
+    end
+
+    function tableData = buildMatchTableData()
+        nMatched = numel(state.inspect.id1);
+        tableData = num2cell(nan(nMatched, 4));
+        if nMatched == 0
+            tableData = cell(0, 4);
+            return
+        end
+        outputSummary = state.inspect.outputSummary;
+        if isempty(outputSummary)
+            for idx = 1:nMatched
+                tableData(idx, 1:2) = {state.inspect.id1(idx), state.inspect.id2(idx)};
+            end
+            return
+        end
+        for idx = 1:nMatched
+            rowIdx = find(outputSummary(:,1) == state.inspect.id1(idx) & outputSummary(:,2) == state.inspect.id2(idx), 1);
+            if isempty(rowIdx)
+                tableData(idx, :) = {state.inspect.id1(idx), state.inspect.id2(idx), NaN, NaN};
+            else
+                rowData = num2cell(outputSummary(rowIdx, 1:4));
+                tableData(idx, :) = rowData;
+            end
         end
     end
 
@@ -1436,9 +1484,11 @@ refreshAll();
             cutoff = NaN;
         end
 
+        matchedRows = min(matchedCount, size(outputSummary, 1));
+        matchedScore = score(1:matchedRows);
         renderInspectionPanelSafely(1, @() renderOriginalMatchedOverlay(app.inspectAxes(1), state.map1, state.map2Tform, state.inspect.id1, state.inspect.id2));
-        renderInspectionPanelSafely(2, @() renderOriginalGradientMap(app.inspectAxes(2), state.map1, outputSummary(:,1), score, cutoff, [0 1 0], 'In Vivo ROI Scores'));
-        renderInspectionPanelSafely(3, @() renderOriginalGradientMap(app.inspectAxes(3), state.map2Tform, outputSummary(:,2), score, cutoff, [1 0 1], 'Ex Vivo ROI Scores'));
+        renderInspectionPanelSafely(2, @() renderOriginalGradientMap(app.inspectAxes(2), state.map1, state.inspect.id1, matchedScore, cutoff, [0 1 0], 'In Vivo ROI Scores'));
+        renderInspectionPanelSafely(3, @() renderOriginalGradientMap(app.inspectAxes(3), state.map2Tform, state.inspect.id2, matchedScore, cutoff, [1 0 1], 'Ex Vivo ROI Scores'));
         renderInspectionPanelSafely(4, @() renderOriginalHistogram(app.inspectAxes(4), finalMatrix, score, secondbest, cutoff, false));
         renderInspectionPanelSafely(5, @() renderOriginalHistogram(app.inspectAxes(5), finalMatrix, score, secondbest, cutoff, true));
         renderInspectionPanelSafely(6, @() renderOriginalScatter(app.inspectAxes(6), score, secondbest, matchedCount, cutoff));
@@ -1465,13 +1515,13 @@ refreshAll();
         imagesc(ax, max(map1Binary(:,:,id1), [], 3) * 2 + max(map2Binary(:,:,id2), [], 3) * 3);
         colormap(ax, mymap);
         set(ax, 'FontSize', 20, 'Visible', 'off');
-        title(ax, 'Matched ROI Overlay', 'Visible', 'on');
+        title(ax, 'Matched ROI Overlay', 'Visible', 'on', 'FontSize', 14, 'FontWeight', 'bold');
         axis(ax, 'image');
     end
 
     function renderOriginalGradientMap(ax, map, ids, score, cutoff, baseColor, titleText)
         cla(ax);
-        if isempty(map) || isempty(ids)
+        if isempty(map) || isempty(ids) || isempty(score)
             showPlaceholder(ax, 'ROI map unavailable.');
             return
         end
@@ -1483,7 +1533,8 @@ refreshAll();
         if isnan(cutoff) || maxScore <= cutoff
             cutoff = min(score);
         end
-        for idx = 1:numel(ids)
+        count = min(numel(ids), numel(score));
+        for idx = 1:count
             if ids(idx) < 1 || ids(idx) > size(mapBinary, 3)
                 continue
             end
@@ -1505,7 +1556,7 @@ refreshAll();
         colormap(ax, customMap);
         caxis(ax, [0 1]);
         set(ax, 'FontSize', 20, 'Visible', 'off');
-        title(ax, titleText, 'Visible', 'on');
+        title(ax, titleText, 'Visible', 'on', 'FontSize', 14, 'FontWeight', 'bold');
         axis(ax, 'image');
     end
 
@@ -1565,10 +1616,10 @@ refreshAll();
         if useLogScale
             set(ax, 'YScale', 'log');
             ylim(ax, [0.002 1] * nScale);
-            title(ax, 'Score Histogram (log)');
+            title(ax, 'Score Histogram (log)', 'FontSize', 14, 'FontWeight', 'bold');
             set(ax, 'TickLength', [0.05, 1]);
         else
-            title(ax, 'Score Histogram');
+            title(ax, 'Score Histogram', 'FontSize', 14, 'FontWeight', 'bold');
             set(ax, 'TickLength', [0.026, 1]);
         end
         xMax = ceil(max(score) / 10) * 10;
@@ -1637,6 +1688,9 @@ refreshAll();
         cla(ax);
         score = double(score(:));
         secondbest = double(secondbest(:));
+        validMask = isfinite(score) & isfinite(secondbest);
+        score = score(validMask);
+        secondbest = secondbest(validMask);
         nPoints = min(numel(score), numel(secondbest));
         score = score(1:nPoints);
         secondbest = secondbest(1:nPoints);
@@ -1645,21 +1699,24 @@ refreshAll();
         lw = 1.5;
         plotColor1st = [1 .65 0.45];
         plotColor1stDark = [.6 .35 0];
-        plot(ax, score, secondbest, '.', 'Color', [.5 .5 .5]);
+        plot(ax, score, secondbest, '.', 'Color', [.55 .55 .55], 'MarkerSize', 7);
         hold(ax, 'on');
         if matchedCount > 0
-            plot(ax, score(1:matchedCount), secondbest(1:matchedCount), '.', 'Color', (plotColor1stDark + plotColor1st) / 2);
+            plot(ax, score(1:matchedCount), secondbest(1:matchedCount), '.', ...
+                'Color', (plotColor1stDark + plotColor1st) / 2, 'MarkerSize', 10);
         end
-        yl = get(ax, 'YLim') * 1.2;
+        maxLine = max([score(:); secondbest(:); 1]) * 1.05;
+        yl = [0, max([secondbest(:); 1]) * 1.15];
         if ~isnan(cutoff)
             line(ax, [mean(cutoff), mean(cutoff)], yl, 'LineStyle', '--', 'Color', [.3 .3 .3], 'LineWidth', lw);
         end
-        line(ax, yl, yl, 'LineStyle', '--', 'Color', [.6 .6 .6], 'LineWidth', lw);
+        line(ax, [0 maxLine], [0 maxLine], 'LineStyle', '--', 'Color', [.6 .6 .6], 'LineWidth', lw);
+        xlim(ax, [0 maxLine]);
         ylim(ax, yl);
         set(ax, 'FontSize', fontsize, 'Box', 'off', 'LineWidth', lw);
         xlabel(ax, 'Soma-print score');
         ylabel(ax, 'Second-best score');
-        title(ax, 'Matched Scatter');
+        title(ax, 'Matched Scatter', 'FontSize', 14, 'FontWeight', 'bold');
         hold(ax, 'off');
     end
 
