@@ -15,8 +15,8 @@
 % - 3) then click "Run Section"
 
 % Read in vivo image and ROI
-invivo_image='Example_data\4_3D_M1_WangEtAl_Fig2\invivo_M1AVG_190um-zoom2-biColor_flip-------in vivo avg-composite.jpg';
-invivo_ROI = 'Example_data\4_3D_M1_WangEtAl_Fig2\invivo_M1AVG_190um-zoom2-biColor_flip-------in vivo avg-composite-RoiSet592.zip';
+invivo_image='Example_data\4_3D_M1_WangEtAl_Fig2\invivo_M1AVG_190um-zoom2-biColor_flip_in vivo avg-composite_pixellength_1d31.jpg';
+invivo_ROI = 'Example_data\4_3D_M1_WangEtAl_Fig2\invivo_M1AVG_190um-zoom2-biColor_flip_in vivo avg-composite-RoiSet592.zip';
 
 image1=imread(invivo_image);
 [h1,w1]=size(image1);map1=readROI(invivo_ROI,h1,w1);
