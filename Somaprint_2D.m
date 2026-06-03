@@ -12,7 +12,6 @@
 % 1) Matched cell IDs
 % 2) Statistics (posterior probability, p-value, likelihood ratio) for all potential matches 
 
-
 % [***** MATLAB tookbox that you may need] (depending on your MATLAB version, so try install this if some functions are missing)]
 % - Computer Vision Toolbox                             
 % - Image Processing Toolbox                              
@@ -27,7 +26,7 @@
 %% ========  Step 1: Read in images and cell maps ======== 
 
 % [***User action***] 
-% - 0) ALways add the entire Soma-print package to your MATLAB search path first
+% - 0) Always add the entire Soma-print package to your MATLAB search path first
 % - 1) Go to your folder with in vivo & ex vivo ROIs and images
 % - 2) Specify the files below or automatically load if your files are named with "invivo" and 'exvivo'; 
 % - 3) then click "Run Section"
@@ -45,7 +44,7 @@ exvivo_ROI='Example_data\1_S1350_2P\exvivo_confocal_all_RoiSet.zip';
 %% ======== Step 2: Select anchor cells for pre-alignment ======== 
 
 % [***User action***] 
-% - click "Run Section, then select >=3 anchor points in the GUI, and then just close the window 
+% - Click "Run Section", then select >=3 anchor points in the GUI, and then just close the window 
 
 [tform,map2_tform,image2_tform,mp,fp]=Somaprint_MannualTransformation(image1,image2,map1,map2);
 
@@ -54,7 +53,7 @@ exvivo_ROI='Example_data\1_S1350_2P\exvivo_confocal_all_RoiSet.zip';
 
 % [***User action***] 
 % - 1) Specificy the pixel size below: option.pixellength
-% - 2) click "Run Section"
+% - 2) Click "Run Section"
 
 option=GetDefaultOption;
 option.pixellength=672/1024;   % *Critical parameter: um / pixel, adjust this according to your in vivo imaging data
@@ -64,11 +63,11 @@ option.pixellength=672/1024;   % *Critical parameter: um / pixel, adjust this ac
 %% ======== Step 4: Plot final results: Statistics, output matched cell IDs ======== 
 
 % [***User action***] 
-% - click "Run Section"
+% - Click "Run Section"
 
 figure(1);clf;
-plot_option=1; % Quick plots with 4 panne;s
-%plot_option=2; % Final plots with 6 pannels
+plot_option=1; % Quick ploting with 4 pannels
+%plot_option=2; % Final ploting with 6 pannels
 [id_output1,id_output2,output_sumamry]=Somaprint_ComputeMatchStatistics(score_weighted{1,length(score_weighted)},map1,map2_tform,[],[],[],[],plot_option);
 
 % --- Output files: 
