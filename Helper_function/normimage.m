@@ -19,7 +19,7 @@ end
 % Auto adjustment
 if method==2;
     min_cut=0.05;
-    max_cut=0.95;
+    max_cut=0.98;
 
     temp=sort(reshape(x,[],1),'ascend');
     l=length(temp);

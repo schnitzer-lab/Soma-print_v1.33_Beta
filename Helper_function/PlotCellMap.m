@@ -27,7 +27,7 @@ else;
 end
 
 if exist('linewidth')==0 %| isempty(linewidth)==1;;
-    linewidth=0.1;
+    linewidth=1.5;
 end
 
 if nargin<5;

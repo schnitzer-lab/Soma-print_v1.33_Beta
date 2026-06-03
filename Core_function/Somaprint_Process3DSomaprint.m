@@ -15,7 +15,7 @@ function [idcell_zoutput,data_idz,data_globalmapscore]=Somaprint_Process3DSomapr
     
     % Plot sorted the scorses heatmaps
     [temp,order]=max(data_globalmapscore,[],2);[~,idx]=sort(order);
-    figure(1);clf;imagesc(data_globalmapscore(idx,:));colormap('hot');
+    figure(1);clf;imagesc(data_globalmapscore(idx,:));colormap(hot(256));
     set(gca,'Visible','off');colorbar;set(gca,'FontSize',25,'LineWidth',2)
 
 
@@ -27,7 +27,7 @@ function [idcell_zoutput,data_idz,data_globalmapscore]=Somaprint_Process3DSomapr
     end
     
     % ---- GLobal map ----
-    fullHot=hot(1+round((max(data_idz)-min(data_idz))*1.2));
+    fullHot=parula(1+round((max(data_idz)-min(data_idz))*1.2));
     plot_color= fullHot(1:(max(data_idz)-min(data_idz)+1),:);
     
     score=max(data_globalmapscore,[],2);

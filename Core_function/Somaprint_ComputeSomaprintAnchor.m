@@ -87,16 +87,20 @@ for i=1:n1;
                end
                data_score_somaprint(i,j)=100./((mean(vec_score(i,j,1:n_sum),3))+1);
 
-              
-               run_anchorrotate=0; % If rotate anchor points 
+              %%
+               run_anchorrotate=0; % If rotate anchor points; Default: Keep it 0!
                if run_anchorrotate==1; 
-                    % ---- Calculate score based on rotated anchor point ----   
+                    fp = vec1;
+                    mp = vec2;
+                    tform = fitgeotform2d(mp,fp,"affine");
+                    [p,q]=transformPointsForward(tform,0,0);
                     vec2_tform=transformPointsForward(tform,vec2)-[p,q];
                     for ii=1:n_vec;          
                         vec_score_tform(ii)=sqrt((vec2_tform(ii,1)-vec1(ii,1)).^2 + (vec2_tform(ii,2)-vec1(ii,2)).^2);              
                     end
                     data_score_somaprint(i,j)=100./((mean(vec_score_tform(1:n_sum)))+1);
                end
+               %%
 
                if exist('anchor_sigma')==1;
                    if isempty(anchor_sigma)==0;

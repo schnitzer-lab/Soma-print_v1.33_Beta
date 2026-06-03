@@ -1,7 +1,9 @@
-function [map1,map2,image1,image2,image2_multi]=Somaprint_GenerateMap(invivo_image,exvivo_image,invivo_ROI,exvivo_ROI);
+function [map1,map2,image1,image2,image2_multi]=Somaprint_GenerateMap(invivo_image,exvivo_image,invivo_ROI,exvivo_ROI,run_norm);
 
 %% ============== Step 1: Loading in vivo and ex vivo images + ROIs ========================================
-
+if exist('run_norm')==0;
+    run_norm=0; % Optional: if normalize in vivo image to the size of ex vivo images 
+end
 
 fprintf(['- Welcome to Soma-print : ) \n']);
 
@@ -30,12 +32,15 @@ map2=readROI(exvivo_ROI,h2,w2,h_scale,w_scale,scale);
 
 % Read in vivo ROIs
 fprintf('- 1.2) Read in vivo ROIs:  \n');
-[h1,w1]=size(image1);
+h1=size(image1,1);w1=size(image1,2);
 
-h_scale=100;w_scale=100; 
-%h_scale=round(h2/h1*100);w_scale=round(h2/h1*100);scale=0.75; % Optional: rescale in vivo images and ROIs to ex vivo images and ROIs
+h_scale=100;w_scale=100; % Origianl size of images
+if run_norm==1;
+    h_scale=round(h2/h1*100);w_scale=round(h2/h1*100);scale=0.75; % Optional: rescale in vivo images and ROIs to ex vivo images and ROIs
+    image1=resample(resample(double(image1),h_scale,100),w_scale,100,'Dimension',2);
+end
 map1=readROI(invivo_ROI,h1,w1,h_scale,w_scale,scale);
-image1=resample(resample(double(image1),h_scale,100),w_scale,100,'Dimension',2);
+image1=imread(invivo_image);
 
 figure(1);clf;
 fprintf('- 1.3) Please wait: now generating images with ROIs .... ... \n')

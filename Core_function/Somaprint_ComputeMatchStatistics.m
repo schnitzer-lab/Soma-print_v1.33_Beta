@@ -21,7 +21,7 @@ plot_color2nd_dark=[0 0 .6];
 
 
 if exist('plot_option')==0;
-    plot_option=1;
+    plot_option=0;
 end
 
 if exist('map1')==0;
@@ -362,9 +362,9 @@ fprintf(['- Computing statistics, fitting Gaussian and Mixture Gaussian models..
             subplot(2,2,1);radius = 8;
              l1=round(max(max(map1(:,1))-min(map1(:,1)), max(map2(:,1))-min(map2(:,1))));           
              l2=round(max(max(map1(:,2))-min(map1(:,2)),max(map2(:,2))-min(map2(:,2))));        
-             mask1 = insertShape(zeros([l2,l1]), 'FilledCircle', [map1(id_cellout1,:), repmat(radius, length(id_cellout1), 1)], ...
+             mask1 = insertShape(zeros([l2,l1]), 'FilledCircle', [map1(id_cellout1,[2,1]), repmat(radius, length(id_cellout1), 1)], ...
                     'Color', 'white', 'Opacity', 1, 'SmoothEdges', false);
-             mask2 = insertShape(zeros([l2,l1]), 'FilledCircle', [map2(id_cellout2,:), repmat(radius, length(id_cellout2), 1)], ...
+             mask2 = insertShape(zeros([l2,l1]), 'FilledCircle', [map2(id_cellout2,[2,1]), repmat(radius, length(id_cellout2), 1)], ...
                     'Color', 'white', 'Opacity', 1, 'SmoothEdges', false);
              mask1=mask1 (:,:,1)>0;mask2=mask2 (:,:,1)>0; 
             imagesc(mask1*2+mask2*3);set(gca,'FontSize',fontsize,'Visible','off');
@@ -374,28 +374,29 @@ fprintf(['- Computing statistics, fitting Gaussian and Mixture Gaussian models..
              set(gca,'XTick',[],'YTick',[]);  xl=get(gca,'XLim');yl=get(gca,'YLim');
 
              subplot(2,2,3);
-             mask1 = insertShape(zeros([l2,l1]), 'FilledCircle', [map1(id_cellout1,:), repmat(radius, length(id_cellout1), 1)], ...
+             mask1 = insertShape(zeros([l2,l1]), 'FilledCircle', [map1(id_cellout1,[2,1]), repmat(radius, length(id_cellout1), 1)], ...
                     'Color', 'white', 'Opacity', 1, 'SmoothEdges', false);
-             mask2 = insertShape(zeros([l2,l1]), 'FilledCircle', [map1, repmat(radius, size(map1,1), 1)], ...
+             mask2 = insertShape(zeros([l2,l1]), 'FilledCircle', [map1(:,[2,1]), repmat(radius, size(map1,1), 1)], ...
                     'Color', 'white', 'Opacity', 1, 'SmoothEdges', false);
              mask1=mask1 (:,:,1)>0;mask2=mask2 (:,:,1)>0;
             imagesc(mask1*1+mask2*1);set(gca,'FontSize',fontsize,'Visible','off');
             colormap(mymap);caxis([0 4])
             set(gca,'XDir','normal','YDir','reverse','LineWidth',2)
             set(gca,'XTick',[],'YTick',[]);   xlim(xl);ylim(yl);
-         % subplot(2,2,3);
-         % plot(map1(:,1),map1(:,2),'o','MarkerSize',4,'Color',[0.7 0.7 0.7]);hold on;
-         % plot(map1(id_cellout1,1),map1(id_cellout1,2),'o','MarkerSize',4,'Color',[0 0.7 0]);hold on;
-         % set(gca,'XDir','normal','YDir','reverse','LineWidth',2)
-         % set(gca,'XTick',[],'YTick',[]);   
-         % xlim([0 l1]);ylim([0 l2]);
-         % 
-         % subplot(2,2,1);
-         % plot(map1(id_cellout1,1),map1(id_cellout1,2),'o','MarkerSize',4,'Color',[0 0.7 0]);hold on;
-         % plot(map2(id_cellout2,1),map2(id_cellout2,2),'o','MarkerSize',4,'Color',[.7 0 .7]);hold on;
-         % set(gca,'XDir','normal','YDir','reverse','LineWidth',2)
-         % set(gca,'XTick',[],'YTick',[]);   
-         % xlim([0 l1]);ylim([0 l2]);
+
+             % subplot(2,2,3);
+             % plot(map1(:,1),map1(:,2),'o','MarkerSize',4,'Color',[0.7 0.7 0.7]);hold on;
+             % plot(map1(id_cellout1,1),map1(id_cellout1,2),'o','MarkerSize',4,'Color',[0 0.7 0]);hold on;
+             % set(gca,'XDir','normal','YDir','reverse','LineWidth',2)
+             % set(gca,'XTick',[],'YTick',[]);   
+             % xlim([0 l1]);ylim([0 l2]);
+             % 
+             % subplot(2,2,1);
+             % plot(map1(id_cellout1,1),map1(id_cellout1,2),'o','MarkerSize',4,'Color',[0 0.7 0]);hold on;
+             % plot(map2(id_cellout2,1),map2(id_cellout2,2),'o','MarkerSize',4,'Color',[.7 0 .7]);hold on;
+             % set(gca,'XDir','normal','YDir','reverse','LineWidth',2)
+             % set(gca,'XTick',[],'YTick',[]);   
+             % xlim([0 l1]);ylim([0 l2]);
 
         end
 
@@ -439,8 +440,9 @@ fprintf(['- Computing statistics, fitting Gaussian and Mixture Gaussian models..
 
         annotation('textbox', [0.03, 0.01, 0.8, 0.05], 'String', ...
             ['Matched cells: ',num2str(length(find(score>cutoff))),'/', num2str(length(score))...
-            ,' , Percent: ',num2str(compose("%.1f%%",length(find(score>cutoff))/length(score)*100)), ', AUC: ',num2str(AUC)], ...
-           'FontSize', 12.5, 'HorizontalAlignment', 'center', 'EdgeColor', 'none');
+            ,' , Percent: ',num2str(compose("%.1f%%",length(find(score>cutoff))/length(score)*100)), ', mean score: ',num2str(mean(score(score>cutoff))),...
+            'mean 2nd-best: ',num2str(mean(secondbest))], ...
+           'FontSize', 7.5, 'HorizontalAlignment', 'center', 'EdgeColor', 'none');
     end
 
 
@@ -448,9 +450,10 @@ fprintf(['- Computing statistics, fitting Gaussian and Mixture Gaussian models..
 %%
         if length(size(map1))==3; % Inputs are cell maps 
             [peak1,lx1,ly1]=Somaprint_ComputePeak(map1(:,:,1:round(quantile(1:size(map1,3),0.1))));
-            [peak2,lx2,ly2]=Somaprint_ComputePeak(map2(:,:,1:round(quantile(1:size(map2,3),0.2))));
+            [peak2,lx2,ly2]=Somaprint_ComputePeak(map2(:,:,1:round(quantile(1:size(map2,3),0.3))));
             fprintf('- Resizing map, ')
             map1=ReplotMap(map1,mean(lx2(lx2>0))/mean(lx1(lx1>0)));
+            %map2=ReplotMap(map2,mean(lx1(lx1>0))/mean(lx2(lx2>0)));
 
             fprintf('- Ploting ...')
             subplot(2,3,1);        
@@ -497,9 +500,9 @@ fprintf(['- Computing statistics, fitting Gaussian and Mixture Gaussian models..
              l2=round(max(max(map1(:,2))-min(map1(:,2)),max(map2(:,2))-min(map2(:,2))));      
              l1=round(max(map1(:,1))-min(map1(:,1)));           
              l2=round(max(map1(:,2))-min(map1(:,2)));  
-             mask1 = insertShape(zeros([l2,l1]), 'FilledCircle', [map1(id_cellout1,:), repmat(radius, length(id_cellout1), 1)], ...
+             mask1 = insertShape(zeros([l2,l1]), 'FilledCircle', [map1(id_cellout1,[2,1]), repmat(radius, length(id_cellout1), 1)], ...
                     'Color', 'white', 'Opacity', 1, 'SmoothEdges', false);
-             mask2 = insertShape(zeros([l2,l1]), 'FilledCircle', [map2(id_cellout2,:), repmat(radius, length(id_cellout2), 1)], ...
+             mask2 = insertShape(zeros([l2,l1]), 'FilledCircle', [map2(id_cellout2,[2,1]), repmat(radius, length(id_cellout2), 1)], ...
                     'Color', 'white', 'Opacity', 1, 'SmoothEdges', false);
              mask1=mask1 (:,:,1)>0;mask2=mask2 (:,:,1)>0; 
             imagesc(mask1*2+mask2*3);set(gca,'FontSize',fontsize,'Visible','off');
@@ -509,9 +512,9 @@ fprintf(['- Computing statistics, fitting Gaussian and Mixture Gaussian models..
              set(gca,'XTick',[],'YTick',[]);  xl=get(gca,'XLim');yl=get(gca,'YLim');
 
              subplot(2,3,2);
-             mask1 = insertShape(zeros([l2,l1]), 'FilledCircle', [map1(id_cellout1,:), repmat(radius, length(id_cellout1), 1)], ...
+             mask1 = insertShape(zeros([l2,l1]), 'FilledCircle', [map1(id_cellout1,[2,1]), repmat(radius, length(id_cellout1), 1)], ...
                     'Color', 'white', 'Opacity', 1, 'SmoothEdges', false);
-             mask2 = insertShape(zeros([l2,l1]), 'FilledCircle', [map1, repmat(radius, size(map1,1), 1)], ...
+             mask2 = insertShape(zeros([l2,l1]), 'FilledCircle', [map1(:,[2,1]), repmat(radius, size(map1,1), 1)], ...
                     'Color', 'white', 'Opacity', 1, 'SmoothEdges', false);
              mask1=mask1 (:,:,1)>0;mask2=mask2 (:,:,1)>0;
             imagesc(mask1*1+mask2*1);set(gca,'FontSize',fontsize,'Visible','off');
@@ -520,9 +523,9 @@ fprintf(['- Computing statistics, fitting Gaussian and Mixture Gaussian models..
             set(gca,'XTick',[],'YTick',[]);   xlim(xl);ylim(yl);
 
             subplot(2,3,3);
-             mask1 = insertShape(zeros([l2,l1]), 'FilledCircle', [map2(id_cellout2,:), repmat(radius, length(id_cellout2), 1)], ...
+             mask1 = insertShape(zeros([l2,l1]), 'FilledCircle', [map2(id_cellout2,[2,1]), repmat(radius, length(id_cellout2), 1)], ...
                     'Color', 'white', 'Opacity', 1, 'SmoothEdges', false);
-             mask2 = insertShape(zeros([l2,l1]), 'FilledCircle', [map2, repmat(radius, size(map2,1), 1)], ...
+             mask2 = insertShape(zeros([l2,l1]), 'FilledCircle', [map2(:,[2,1]), repmat(radius, size(map2,1), 1)], ...
                     'Color', 'white', 'Opacity', 1, 'SmoothEdges', false);
              mask1=mask1 (:,:,1)>0;mask2=mask2 (:,:,1)>0;
              
@@ -565,7 +568,7 @@ fprintf(['- Computing statistics, fitting Gaussian and Mixture Gaussian models..
         plot(score(1:length(id_cellout1)),secondbest(1:length(id_cellout1)),'.','Color',(plot_color1st_dark+plot_color1st)/2);yl=get(gca,'YLim');
         yl=yl*1.2;
         line([mean(cutoff),mean(cutoff)],yl,'LineStyle','--','Color',[.3 .3 .3],'LineWidth',lw)
-        line(yl,yl,'LineStyle','--','Color',[.6 .6 .6],'LineWidth',lw)
+        %line(yl,yl,'LineStyle','--','Color',[.6 .6 .6],'LineWidth',lw)
         ylim(yl);
         set(gca,'FontSize',fontsize,'box','off','LineWidth',lw);
         xl=get(gca,'XLim');
@@ -589,13 +592,20 @@ fprintf(['- Computing statistics, fitting Gaussian and Mixture Gaussian models..
         set(gca,'XTick',[0:10: x_max]);     
         set(get(gca(),'XAxis'),'MinorTickValues',[10:10:x_max]);
         xlim([0 x_max]);
-
+    if method==2;
        
         annotation('textbox', [0.03, 0.01, 0.8, 0.05], 'String', ...
             ['Matched: ',num2str(length(find(score>cutoff))),'/', num2str(length(score))...
             ,' , Percent: ',num2str(compose("%.1f%%",length(find(score>cutoff))/length(score)*100)),', ex vivo:', num2str(size(map2,3)),...
             ',p-val:', num2str(length(id_output1_pv)), ',LR:', num2str(length(id_output1_lr))], ...
-           'FontSize', 10, 'HorizontalAlignment', 'center', 'EdgeColor', 'none');   
+           'FontSize', 10, 'HorizontalAlignment', 'center', 'EdgeColor', 'none');  
+    
+    else
+        annotation('textbox', [0.03, 0.01, 0.8, 0.05], 'String', ...
+            ['Matched: ',num2str(length(find(score>cutoff))),'/', num2str(length(score))...
+            ,' , Percent: ',num2str(compose("%.1f%%",length(find(score>cutoff))/length(score)*100)),', ex vivo:', num2str(size(map2,3))], ...
+           'FontSize', 10, 'HorizontalAlignment', 'center', 'EdgeColor', 'none');  
+    end
    end
 
 % ----- Step 4: Final plots ----

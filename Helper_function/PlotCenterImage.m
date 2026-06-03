@@ -12,7 +12,7 @@ if exist('id_cell')==0;
 end
 
     for i=1:length(id_cell);
-        plot(x(id_cell(i),2),x(id_cell(i),1),'o','Color',plot_color); % X/Y inverted
+        plot(x(id_cell(i),2),x(id_cell(i),1),'o','Color',plot_color,'MarkerSize',15); % X/Y inverted
         hold on;
         if input_fontsize>0;
             text(x(id_cell(i),2),x(id_cell(i),1),num2str(id_cell(i)),'FontSize',input_fontsize,'Color',plot_color);

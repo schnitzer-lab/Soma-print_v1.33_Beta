@@ -14,6 +14,9 @@ end
 if exist('run_tform')==0;
     run_tform=0;
 end
+
+
+
 tform=[];
 
     data_nitermax=option.nitermax;

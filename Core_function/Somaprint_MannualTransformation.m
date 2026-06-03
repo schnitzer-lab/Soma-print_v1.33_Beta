@@ -1,4 +1,4 @@
-function [tform,map2_tform,image2_tform]=Somaprint_MannualTransformation(image1,image2,map1,map2,tform);
+function [tform,map2_tform,image2_tform,mp, fp]=Somaprint_MannualTransformation(image1,image2,map1,map2,tform);
     % ============== Step 2: option 1, Pre-registration with manual anchor points ========================================
     fprintf(['------------------------------------------------------------------------------------------\n']);
     fprintf('----------------------  Step 2: Image pre-alignment ----------------  \n')

@@ -1,26 +1,46 @@
-function image_reconstruct=Somaprint_ReconstructCurvedManifold(centroid1,id_output3D,data_idz,image1,image2_tform)
+function [image_reconstruct,zt]=Somaprint_ReconstructCurvedManifold(centroid1,id_output3D,data_idz,image1,image2_tform,p,subsample,zt)
 %% Fitting manifold, Thie-plate smoothing spline
+    
 
-    center_out=centroid1(id_output3D,:);
-    x=center_out(:,2);y=center_out(:,1);z=data_idz';
-    
-    p = 0.1;        % smoothing parameter
-    
-    [xq,yq] = meshgrid(1:size(image1,2),1:size(image1,1));
-    X = [x'; y'];   % transpose!
-    st = tpaps(X, z,p);
-    fprintf(['- Fitting completed!Computing manifold... \n'])
-    zt = fnval(st, [xq(:)'; yq(:)']);
-    zt = reshape(zt, size(xq));
-    
-    % figure(3);clf;surf(zt), shading interp
-    % hold on; colormap('hot');set(gca,'YDir','reverse')
-    % scatter3(x,y,z,30,'r','filled');set(gca,'FontSize',40,'LineWidth',2);set(gca,'XTick',[],'YTick',[])
-    figure(4);clf; % Plotting 2D manifo
-    imagesc(zt);colorbar;colormap('hot');set(gca,'Visible','off')
+    if exist('p')==0;
+        p=0.1;
+    end
 
+    if exist('subsample')==0;
+        subsample=1;
+    end
+       
+    if  exist('zt')==0;
+%%
+        if subsample>1;
+            idx_select=randperm(length(id_output3D),round(length(id_output3D)/subsample));
+            id_output3D=id_output3D(idx_select);
+            data_idz=data_idz(idx_select);
+        end
+    
+        center_out=centroid1(id_output3D,:);
+        x=center_out(:,2);y=center_out(:,1);z=data_idz';
+        
+      
+        
+        [xq,yq] = meshgrid(1:size(image1,2),1:size(image1,1));
+        X = [x'; y'];   % transpose!
+        st = tpaps(X, z,p);
+        fprintf(['- Fitting completed!Computing manifold... \n'])
+        zt = fnval(st, [xq(:)'; yq(:)']);
+        zt = reshape(zt, size(xq));
+        
+        % figure(3);clf;surf(zt), shading interp
+        % hold on; colormap('hot');set(gca,'YDir','reverse')
+        % scatter3(x,y,z,30,'r','filled');set(gca,'FontSize',40,'LineWidth',2);set(gca,'XTick',[],'YTick',[])
+        figure(4);clf; % Plotting 2D manifo
+        imagesc(zt);colorbar;colormap('hot');set(gca,'Visible','off')
+    end
     %% Reconstruct image with manifold: single-channel, uniform thickness
     z_thick=3;
+    zt(zt<2)=2;
+    zt(zt>=length(image2_tform)-1)=length(image2_tform)-1;
+    
     
     for i=1:size(image1,1);
         for j=1:size(image1,2);
