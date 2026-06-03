@@ -9,14 +9,14 @@
 %% ============== Step 1: Loading in vivo images and ROIs ========================================
 
 % [***User action***] 
-% - 0) Always add the entire Soma-print package to your MATLAB search path first
+% - 0) ALways add the entire Soma-print package to your MATLAB search path first
 % - 1) Go to your folder with in vivo ROIs and images
 % - 2) Specify the files below 
-% - 3) Then click "Run Section"
+% - 3) then click "Run Section"
 
 % Read in vivo image and ROI
-invivo_image='invivo_M1AVG_190um-zoom2-biColor_flip-------in vivo avg-composite.jpg';
-invivo_ROI = 'invivo_M1AVG_190um-zoom2-biColor_flip-------in vivo avg-composite-RoiSet592.zip';
+invivo_image='Example_data\4_3D_M1_WangEtAl_Fig2\invivo_M1AVG_190um-zoom2-biColor_flip-------in vivo avg-composite.jpg';
+invivo_ROI = 'Example_data\4_3D_M1_WangEtAl_Fig2\invivo_M1AVG_190um-zoom2-biColor_flip-------in vivo avg-composite-RoiSet592.zip';
 
 image1=imread(invivo_image);
 [h1,w1]=size(image1);map1=readROI(invivo_ROI,h1,w1);
@@ -27,16 +27,16 @@ centroid1=Somaprint_ComputePeak(map1); % Compute centroid from in vivo maps
 % [***User action***] 
 % - 1) Go to your folder with ex vivo ROIs and images
 % - 2) Specify the files name, number of stacks (n_zstacks)
-% - 3) Then click "Run Section"
+% - 3) then click "Run Section"
 
-n_zstack=35;
+n_zstack=20;
 
 for jjjj=1:n_zstack;
     fprintf(['- Loading Z-stack:',num2str(jjjj),',']);  
-    exvivo_image=sprintf('Slice2_M1_invivo34_z12_RAW-------rotate4.5_z0%02d.tif', jjjj);%%02d
+    exvivo_image=sprintf('Example_data\4_3D_M1_WangEtAl_Fig2\Slice2_M1_invivo34_z12_RAW-------rotate4.5_z0%02d.tif', jjjj);%%02d
     image2{jjjj}=imread(exvivo_image); 
 
-    exvivo_ROI=sprintf('Slice2_M1_invivo34_z12_RAW-------rotate4.5_z0%02d_c001RoiSet.zip', jjjj);%%02d  
+    exvivo_ROI=sprintf('Example_data\4_3D_M1_WangEtAl_Fig2\Slice2_M1_invivo34_z12_RAW-------rotate4.5_z0%02d_c001RoiSet.zip', jjjj);%%02d  
     [centroid2{jjjj}]=readCentroid(exvivo_ROI);
 end
 
@@ -44,9 +44,9 @@ end
 
 % [***User action***] 
 % - 1) Specify one of the central z-stacks for pre-alignment (z)
-% - 2) Click "Run Section"
+% - 2) click "Run Section"
 
-z=17; % Choose one of the central z-stack 
+z=10; % Choose one of the central z-stack 
 [mp,fp] = cpselect(normimage(image2{z},1),normimage(image1,1),Wait=true);
 
 tform = fitgeotform2d(mp,fp,"affine");
@@ -59,7 +59,7 @@ end
 %% ==============  Step 4: Soma-print for individual planes ============== 
 % [***User action***] 
 % - 1) Specificy the pixel size below: option.pixellength
-% - 2) Click "Run Section"
+% - 2) click "Run Section"
 
 option=GetDefaultOption(3);
 option.pixellength=672/512;  % *Critical parameter: um / pixel, adjust this according to your in vivo imaging data
@@ -73,7 +73,7 @@ end
 
 % [***User action***] 
 % - 1) Specificy the pixel size below: option.pixellength
-% - 2) Click "Run Section"
+% - 2) click "Run Section"
 
 z=15; % Choose the individual plane that you want to see the results
 figure(1);clf;

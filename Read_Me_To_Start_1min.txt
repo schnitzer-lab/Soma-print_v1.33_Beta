@@ -3,14 +3,14 @@ Welcome to Soma-print 1.33.
 ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- -------
 
 - If you are 1st-time user and OK with MATLAB:
->>> Open and run through [Somaprint_2D.m] (This only takes 5 mins to give you an overview of the algorithm). 
+>>> Open and run through the demo file [Somaprint_2D.m] (This only takes 5 mins to give you an overview of the algorithm). 
 
 
 - If you are 1st-time user and not familiar with MATLAB: 
->>> Open MATLAB and type "Somaprint2D_GUI" in the command window and then return (*** currently this only works with certain version of MATLAB). 
+>>> Open MATLAB and type "Somaprint_2D_GUI" in the command window and then return (*** currently this only works with certain version of MATLAB). 
 
 - If you want to align 2D in vivo image to 3D/multi-plane ex vivo images: 
->>> Open and run through [Somaprint_3D.m]. 
+>>> Open and run through the demo file [Somaprint_3D.m]. 
 
 ------ ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- -------
 
