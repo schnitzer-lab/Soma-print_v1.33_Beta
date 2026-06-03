@@ -151,7 +151,7 @@ refreshAll();
             'Units', 'normalized', 'Position', [0 0 1 1]);
         grid = uigridlayout(app.page1, [1, 2]);
         grid.RowHeight = {'1x'};
-        grid.ColumnWidth = {540, '1x'};
+        grid.ColumnWidth = {650, '1x'};
         grid.Padding = [0 0 0 0];
         grid.RowSpacing = 10;
         grid.ColumnSpacing = 10;
@@ -160,7 +160,7 @@ refreshAll();
         controlPanel.Layout.Row = 1;
         controlPanel.Layout.Column = 1;
         controlGrid = uigridlayout(controlPanel, [4, 1]);
-        controlGrid.RowHeight = {224, 52, 104, '1x'};
+        controlGrid.RowHeight = {224, 56, 110, '1x'};
         controlGrid.ColumnWidth = {'1x'};
         controlGrid.Padding = [0 0 0 0];
         controlGrid.RowSpacing = 10;
@@ -169,7 +169,7 @@ refreshAll();
         uploadTopPanel.Layout.Row = 1;
         uploadTopPanel.Layout.Column = 1;
         uploadTopGrid = uigridlayout(uploadTopPanel, [1, 2]);
-        uploadTopGrid.ColumnWidth = {240, '1x'};
+        uploadTopGrid.ColumnWidth = {170, '1x'};
         uploadTopGrid.RowHeight = {'1x'};
         uploadTopGrid.Padding = [0 0 0 0];
         uploadTopGrid.ColumnSpacing = 10;
@@ -187,8 +187,8 @@ refreshAll();
         inputPanel.Layout.Row = 1;
         inputPanel.Layout.Column = 2;
         inputGrid = uigridlayout(inputPanel, [6, 3]);
-        inputGrid.ColumnWidth = {130, '1x', 90};
-        inputGrid.RowHeight = {30, 30, 30, 30, 30, 30};
+        inputGrid.ColumnWidth = {96, '1x', 74};
+        inputGrid.RowHeight = {34, 34, 34, 34, 34, 34};
 
         rootLabel = uilabel(inputGrid, 'Text', 'Root folder');
         rootLabel.Layout.Row = 1;
@@ -211,7 +211,7 @@ refreshAll();
         loadPanel = uipanel(controlGrid, 'BorderType', 'none');
         loadPanel.Layout.Row = 2;
         loadGrid = uigridlayout(loadPanel, [1, 7]);
-        loadGrid.ColumnWidth = {'1x', 150, 12, 150, 12, '1x', 160};
+        loadGrid.ColumnWidth = {'1x', 170, 12, 140, 12, '1x', 190};
         loadGrid.Padding = [0 0 0 0];
         loadGrid.ColumnSpacing = 0;
 
@@ -263,14 +263,14 @@ refreshAll();
         app.page2 = uipanel(app.pageStack, 'BorderType', 'none', ...
             'Units', 'normalized', 'Position', [0 0 1 1], 'Visible', 'off');
         grid = uigridlayout(app.page2, [1, 2]);
-        grid.ColumnWidth = {260, '1x'};
+        grid.ColumnWidth = {300, '1x'};
         grid.Padding = [0 0 0 0];
         grid.ColumnSpacing = 10;
 
         controlPanel = uipanel(grid, 'Title', 'Anchor Point Selection');
         controlPanel.Layout.Column = 1;
         cg = uigridlayout(controlPanel, [8, 1]);
-        cg.RowHeight = {240, 90, 32, 32, 32, '1x', 120, 24};
+        cg.RowHeight = {220, 100, 40, 40, 40, '1x', 120, 24};
 
         app.logoAxesAlign = uiaxes(cg);
         safeHideAxesToolbar(app.logoAxesAlign);
@@ -545,11 +545,13 @@ refreshAll();
         lbl.Layout.Column = 1;
 
         app.fileEdits.(fieldName) = uieditfield(parent, 'text', 'Editable', 'off');
+        app.fileEdits.(fieldName).FontSize = 11;
         app.fileEdits.(fieldName).Layout.Row = row;
         app.fileEdits.(fieldName).Layout.Column = 2;
 
         btn = uibutton(parent, 'push', 'Text', 'Browse', ...
             'ButtonPushedFcn', @(~,~) browseFile(fieldName));
+        btn.FontSize = 11;
         btn.Layout.Row = row;
         btn.Layout.Column = 3;
     end
@@ -596,10 +598,13 @@ refreshAll();
     end
 
     function logoPath = resolveLogoPath()
-        preferredPath = fullfile(pkgRoot, 'Documents', 'Logo_v1d32.png');
+        preferredPath = fullfile(pkgRoot, 'Documents', 'Logo_v1d33.jpg');
+        secondaryPath = fullfile(pkgRoot, 'Documents', 'Logo_v1d32.png');
         fallbackPath = fullfile(pkgRoot, 'Documents', 'Somaprint_logo.png');
         if exist(preferredPath, 'file')
             logoPath = preferredPath;
+        elseif exist(secondaryPath, 'file')
+            logoPath = secondaryPath;
         else
             logoPath = fallbackPath;
         end
