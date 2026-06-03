@@ -149,16 +149,27 @@ refreshAll();
     function buildUploadPage()
         app.page1 = uipanel(app.pageStack, 'BorderType', 'none', ...
             'Units', 'normalized', 'Position', [0 0 1 1]);
-        grid = uigridlayout(app.page1, [4, 1]);
-        grid.RowHeight = {224, 52, 90, '1x'};
-        grid.ColumnWidth = {'1x'};
+        grid = uigridlayout(app.page1, [1, 2]);
+        grid.RowHeight = {'1x'};
+        grid.ColumnWidth = {540, '1x'};
         grid.Padding = [0 0 0 0];
         grid.RowSpacing = 10;
+        grid.ColumnSpacing = 10;
 
-        uploadTopPanel = uipanel(grid, 'BorderType', 'none');
+        controlPanel = uipanel(grid, 'BorderType', 'none');
+        controlPanel.Layout.Row = 1;
+        controlPanel.Layout.Column = 1;
+        controlGrid = uigridlayout(controlPanel, [4, 1]);
+        controlGrid.RowHeight = {224, 52, 104, '1x'};
+        controlGrid.ColumnWidth = {'1x'};
+        controlGrid.Padding = [0 0 0 0];
+        controlGrid.RowSpacing = 10;
+
+        uploadTopPanel = uipanel(controlGrid, 'BorderType', 'none');
         uploadTopPanel.Layout.Row = 1;
+        uploadTopPanel.Layout.Column = 1;
         uploadTopGrid = uigridlayout(uploadTopPanel, [1, 2]);
-        uploadTopGrid.ColumnWidth = {260, '1x'};
+        uploadTopGrid.ColumnWidth = {240, '1x'};
         uploadTopGrid.RowHeight = {'1x'};
         uploadTopGrid.Padding = [0 0 0 0];
         uploadTopGrid.ColumnSpacing = 10;
@@ -169,7 +180,7 @@ refreshAll();
         logoGrid = uigridlayout(logoPanel, [1, 1]);
         logoGrid.Padding = [0 0 0 0];
         app.logoAxes = uiaxes(logoGrid);
-        app.logoAxes.Toolbar.Visible = 'off';
+        safeHideAxesToolbar(app.logoAxes);
         renderLogo();
 
         inputPanel = uipanel(uploadTopGrid, 'Title', 'Input Files');
@@ -197,11 +208,12 @@ refreshAll();
         makeFileRow(inputGrid, 4, 'Ex vivo image', 'exvivoImage');
         makeFileRow(inputGrid, 5, 'Ex vivo ROI', 'exvivoROI');
 
-        loadPanel = uipanel(grid, 'BorderType', 'none');
+        loadPanel = uipanel(controlGrid, 'BorderType', 'none');
         loadPanel.Layout.Row = 2;
         loadGrid = uigridlayout(loadPanel, [1, 7]);
-        loadGrid.ColumnWidth = {'1x', 180, 20, 180, 20, '1x', 240};
+        loadGrid.ColumnWidth = {'1x', 150, 12, 150, 12, '1x', 160};
         loadGrid.Padding = [0 0 0 0];
+        loadGrid.ColumnSpacing = 0;
 
         app.autoLoadButton = uibutton(loadGrid, 'push', ...
             'Text', 'Auto load filenames', ...
@@ -222,7 +234,7 @@ refreshAll();
         app.uploadSummaryLabel.Layout.Column = 7;
         app.uploadSummaryLabel.HorizontalAlignment = 'right';
 
-        statusPanel = uipanel(grid, 'Title', 'Loading Status');
+        statusPanel = uipanel(controlGrid, 'Title', 'Loading Status');
         statusPanel.Layout.Row = 3;
         statusGrid = uigridlayout(statusPanel, [1, 1]);
         app.uploadStatus = uitextarea(statusGrid, ...
@@ -230,9 +242,13 @@ refreshAll();
             'Value', {'Choose the 4 files above, then click Load files.'});
 
         previewPanel = uipanel(grid, 'Title', 'Preview');
-        previewPanel.Layout.Row = 4;
+        previewPanel.Layout.Row = 1;
+        previewPanel.Layout.Column = 2;
         previewGrid = uigridlayout(previewPanel, [1, 2]);
         previewGrid.ColumnWidth = {'1x', '1x'};
+        previewGrid.RowHeight = {'1x'};
+        previewGrid.Padding = [4 4 4 4];
+        previewGrid.ColumnSpacing = 10;
 
         app.axUploadInvivo = uiaxes(previewGrid);
         title(app.axUploadInvivo, 'In vivo image + ROI');
@@ -257,7 +273,7 @@ refreshAll();
         cg.RowHeight = {240, 90, 32, 32, 32, '1x', 120, 24};
 
         app.logoAxesAlign = uiaxes(cg);
-        app.logoAxesAlign.Toolbar.Visible = 'off';
+        safeHideAxesToolbar(app.logoAxesAlign);
         app.logoAxesAlign.Layout.Row = 1;
         renderLogoOnAxes(app.logoAxesAlign);
 
@@ -336,12 +352,12 @@ refreshAll();
         advancedFields = optionFields(~ismember(optionFields, basicFields));
 
         paramRoot = uigridlayout(paramPanel, [4, 1]);
-        paramRoot.RowHeight = {270, 38, 'fit', '1x'};
+        paramRoot.RowHeight = {270, 38, 132, '1x'};
         paramRoot.RowSpacing = 8;
         paramRoot.Padding = [8 8 8 8];
 
         app.logoAxesSoma = uiaxes(paramRoot);
-        app.logoAxesSoma.Toolbar.Visible = 'off';
+        safeHideAxesToolbar(app.logoAxesSoma);
         app.logoAxesSoma.Layout.Row = 1;
         renderLogoOnAxes(app.logoAxesSoma);
 
@@ -500,7 +516,7 @@ refreshAll();
         lg2 = uigridlayout(logoPanel, [1, 1]);
         lg2.Padding = [6 6 6 6];
         app.logoAxesInspect = uiaxes(lg2);
-        app.logoAxesInspect.Toolbar.Visible = 'off';
+        safeHideAxesToolbar(app.logoAxesInspect);
         renderLogoOnAxes(app.logoAxesInspect);
     end
 
@@ -552,6 +568,14 @@ refreshAll();
     function renderLogo()
         logoPath = resolveLogoPath();
         renderLogoOnAxes(app.logoAxes, logoPath);
+    end
+
+    function safeHideAxesToolbar(ax)
+        try
+            ax.Toolbar.Visible = 'off';
+        catch
+            % Older MATLAB releases may not expose Toolbar on uiaxes.
+        end
     end
 
     function renderLogoOnAxes(ax, logoPath)
