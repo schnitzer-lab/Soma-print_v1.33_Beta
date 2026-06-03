@@ -31,13 +31,15 @@ centroid1=Somaprint_ComputePeak(map1); % Compute centroid from in vivo maps
 
 n_zstack=20;
 
+filepath='Example_data\4_3D_M1_WangEtAl_Fig2\';
+
 for jjjj=1:n_zstack;
     fprintf(['- Loading Z-stack:',num2str(jjjj),',']);  
-    exvivo_image=sprintf('Example_data\4_3D_M1_WangEtAl_Fig2\Slice2_M1_invivo34_z12_RAW-------rotate4.5_z0%02d.tif', jjjj);%%02d
-    image2{jjjj}=imread(exvivo_image); 
+    exvivo_image=sprintf('Slice2_M1_invivo34_z12_RAW-------rotate4.5_z0%02d.tif', jjjj);%%02d
+    image2{jjjj}=imread([filepath,exvivo_image]); 
 
-    exvivo_ROI=sprintf('Example_data\4_3D_M1_WangEtAl_Fig2\Slice2_M1_invivo34_z12_RAW-------rotate4.5_z0%02d_c001RoiSet.zip', jjjj);%%02d  
-    [centroid2{jjjj}]=readCentroid(exvivo_ROI);
+    exvivo_ROI=sprintf('Slice2_M1_invivo34_z12_RAW-------rotate4.5_z0%02d_c001RoiSet.zip', jjjj);%%02d  
+    [centroid2{jjjj}]=readCentroid([filepath,exvivo_ROI]);
 end
 
 %% ============== Step 3: Transformation w/ one of the ex vivo planes ==============
