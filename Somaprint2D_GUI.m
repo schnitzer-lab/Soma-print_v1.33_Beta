@@ -269,8 +269,10 @@ refreshAll();
 
         controlPanel = uipanel(grid, 'Title', 'Anchor Point Selection');
         controlPanel.Layout.Column = 1;
-        cg = uigridlayout(controlPanel, [8, 1]);
-        cg.RowHeight = {220, 100, 40, 40, 40, '1x', 120, 24};
+        cg = uigridlayout(controlPanel, [6, 1]);
+        cg.RowHeight = {200, 96, 42, '1x', 120, 24};
+        cg.RowSpacing = 8;
+        cg.Padding = [8 8 8 8];
 
         app.logoAxesAlign = uiaxes(cg);
         safeHideAxesToolbar(app.logoAxesAlign);
@@ -284,28 +286,40 @@ refreshAll();
             'Editable', 'off');
         app.alignInstruction.Layout.Row = 2;
 
-        app.addPairButton = uibutton(cg, 'push', 'Text', 'Open cpselect', ...
+        buttonRow = uigridlayout(cg, [1, 3]);
+        buttonRow.Layout.Row = 3;
+        buttonRow.ColumnWidth = {'1x', '1x', '1x'};
+        buttonRow.ColumnSpacing = 8;
+        buttonRow.Padding = [0 0 0 0];
+
+        app.addPairButton = uibutton(buttonRow, 'push', 'Text', 'Open cpselect', ...
             'ButtonPushedFcn', @(~,~) launchCpselect());
-        app.addPairButton.Layout.Row = 3;
+        app.addPairButton.Layout.Row = 1;
+        app.addPairButton.Layout.Column = 1;
+        app.addPairButton.FontSize = 11;
 
-        app.clearPairsButton = uibutton(cg, 'push', 'Text', 'Clear All', ...
+        app.clearPairsButton = uibutton(buttonRow, 'push', 'Text', 'Clear All', ...
             'ButtonPushedFcn', @(~,~) clearPairs());
-        app.clearPairsButton.Layout.Row = 4;
+        app.clearPairsButton.Layout.Row = 1;
+        app.clearPairsButton.Layout.Column = 2;
+        app.clearPairsButton.FontSize = 11;
 
-        app.applyTransformButton = uibutton(cg, 'push', 'Text', 'Apply Transform', ...
+        app.applyTransformButton = uibutton(buttonRow, 'push', 'Text', 'Apply Transform', ...
             'ButtonPushedFcn', @(~,~) applyTransform());
-        app.applyTransformButton.Layout.Row = 5;
+        app.applyTransformButton.Layout.Row = 1;
+        app.applyTransformButton.Layout.Column = 3;
+        app.applyTransformButton.FontSize = 11;
 
         app.anchorTable = uitable(cg, ...
             'ColumnName', {'InVivo X', 'InVivo Y', 'ExVivo X', 'ExVivo Y'}, ...
             'ColumnEditable', false(1,4));
-        app.anchorTable.Layout.Row = 6;
+        app.anchorTable.Layout.Row = 4;
 
         app.alignStatus = uitextarea(cg, 'Editable', 'off');
-        app.alignStatus.Layout.Row = 7;
+        app.alignStatus.Layout.Row = 5;
 
         app.alignPairCountLabel = uilabel(cg, 'Text', 'Pairs: 0');
-        app.alignPairCountLabel.Layout.Row = 8;
+        app.alignPairCountLabel.Layout.Row = 6;
 
         visualPanel = uipanel(grid, 'Title', 'Pre-alignment Views');
         visualPanel.Layout.Column = 2;
@@ -338,7 +352,7 @@ refreshAll();
         app.page3 = uipanel(app.pageStack, 'BorderType', 'none', ...
             'Units', 'normalized', 'Position', [0 0 1 1], 'Visible', 'off');
         grid = uigridlayout(app.page3, [3, 2]);
-        grid.ColumnWidth = {300, '1x'};
+        grid.ColumnWidth = {360, '1x'};
         grid.RowHeight = {'1.1x', 270, 220};
         grid.Padding = [0 0 0 0];
         grid.RowSpacing = 10;
@@ -352,7 +366,7 @@ refreshAll();
         advancedFields = optionFields(~ismember(optionFields, basicFields));
 
         paramRoot = uigridlayout(paramPanel, [4, 1]);
-        paramRoot.RowHeight = {270, 38, 132, '1x'};
+        paramRoot.RowHeight = {150, 38, 108, '1x'};
         paramRoot.RowSpacing = 8;
         paramRoot.Padding = [8 8 8 8];
 
@@ -368,31 +382,40 @@ refreshAll();
 
         basicPanel = uipanel(paramRoot, 'Title', 'Basic Parameters');
         basicPanel.Layout.Row = 3;
-        basicGrid = uigridlayout(basicPanel, [numel(basicFields), 2]);
-        basicGrid.ColumnWidth = {125, '1x'};
-        basicGrid.RowHeight = repmat({28}, 1, numel(basicFields));
+        basicGrid = uigridlayout(basicPanel, [2, 4]);
+        basicGrid.ColumnWidth = {92, '1x', 92, '1x'};
+        basicGrid.RowHeight = {30, 30};
         basicGrid.RowSpacing = 4;
         basicGrid.Padding = [8 8 8 8];
         for idx = 1:numel(basicFields)
             fieldName = basicFields{idx};
-            makeNumericField(basicGrid, idx, optionLabel(fieldName), fieldName, state.option.(fieldName));
+            row = ceil(idx / 2);
+            pairIdx = mod(idx - 1, 2);
+            labelCol = 1 + pairIdx * 2;
+            valueCol = labelCol + 1;
+            makeNumericFieldAt(basicGrid, row, labelCol, valueCol, optionLabel(fieldName), fieldName, state.option.(fieldName));
         end
 
         advancedPanel = uipanel(paramRoot, 'Title', 'Advanced Parameters');
         advancedPanel.Layout.Row = 4;
-        advancedGrid = uigridlayout(advancedPanel, [numel(advancedFields) + 1, 2]);
-        advancedGrid.ColumnWidth = {125, '1x'};
-        advancedGrid.RowHeight = [{44}, repmat({28}, 1, numel(advancedFields))];
+        advancedRows = ceil(numel(advancedFields) / 2);
+        advancedGrid = uigridlayout(advancedPanel, [advancedRows + 1, 4]);
+        advancedGrid.ColumnWidth = {92, '1x', 92, '1x'};
+        advancedGrid.RowHeight = [{34}, repmat({28}, 1, advancedRows)];
         advancedGrid.RowSpacing = 4;
         advancedGrid.Padding = [8 8 8 8];
         advancedNote = uilabel(advancedGrid, ...
             'Text', 'Most users can leave these at their defaults.', ...
             'WordWrap', 'on');
         advancedNote.Layout.Row = 1;
-        advancedNote.Layout.Column = [1 2];
+        advancedNote.Layout.Column = [1 4];
         for idx = 1:numel(advancedFields)
             fieldName = advancedFields{idx};
-            makeNumericField(advancedGrid, idx + 1, optionLabel(fieldName), fieldName, state.option.(fieldName));
+            row = ceil(idx / 2) + 1;
+            pairIdx = mod(idx - 1, 2);
+            labelCol = 1 + pairIdx * 2;
+            valueCol = labelCol + 1;
+            makeNumericFieldAt(advancedGrid, row, labelCol, valueCol, optionLabel(fieldName), fieldName, state.option.(fieldName));
         end
 
         logPanel = uipanel(grid, 'Title', 'Algorithm Log');
@@ -565,6 +588,17 @@ refreshAll();
             'Value', defaultValue, 'LowerLimit', -Inf);
         app.paramEdits.(fieldName).Layout.Row = row;
         app.paramEdits.(fieldName).Layout.Column = 2;
+    end
+
+    function makeNumericFieldAt(parent, row, labelCol, valueCol, labelText, fieldName, defaultValue)
+        lbl = uilabel(parent, 'Text', labelText);
+        lbl.Layout.Row = row;
+        lbl.Layout.Column = labelCol;
+
+        app.paramEdits.(fieldName) = uieditfield(parent, 'numeric', ...
+            'Value', defaultValue, 'LowerLimit', -Inf);
+        app.paramEdits.(fieldName).Layout.Row = row;
+        app.paramEdits.(fieldName).Layout.Column = valueCol;
     end
 
     function renderLogo()
