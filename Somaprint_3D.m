@@ -29,7 +29,7 @@ centroid1=Somaprint_ComputePeak(map1); % Compute centroid from in vivo maps
 % - 2) Specify the files name, number of stacks (n_zstacks)
 % - 3) then click "Run Section"
 
-n_zstack=20;
+n_zstack=22;
 
 filepath='Example_data\4_3D_M1_WangEtAl_Fig2\';
 
