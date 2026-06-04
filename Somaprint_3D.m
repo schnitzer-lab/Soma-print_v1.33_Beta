@@ -35,10 +35,10 @@ filepath='Example_data\4_3D_M1_WangEtAl_Fig2\';
 
 for jjjj=1:n_zstack;
     fprintf(['- Loading Z-stack:',num2str(jjjj),',']);  
-    exvivo_image=sprintf('Slice2_M1_invivo34_z12_RAW-------rotate4.5_z0%02d.tif', jjjj);%%02d
+    exvivo_image=sprintf('exvivo_Slice2_M1_invivo34_z12_RAW-------rotate4.5_z0%02d.tif', jjjj);%%02d
     image2{jjjj}=imread([filepath,exvivo_image]); 
 
-    exvivo_ROI=sprintf('Slice2_M1_invivo34_z12_RAW-------rotate4.5_z0%02d_c001RoiSet.zip', jjjj);%%02d  
+    exvivo_ROI=sprintf('exvivo_Slice2_M1_invivo34_z12_RAW-------rotate4.5_z0%02d_c001RoiSet.zip', jjjj);%%02d  
     [centroid2{jjjj}]=readCentroid([filepath,exvivo_ROI]);
 end
 
