@@ -160,7 +160,7 @@ refreshAll();
         controlPanel.Layout.Row = 1;
         controlPanel.Layout.Column = 1;
         controlGrid = uigridlayout(controlPanel, [4, 1]);
-        controlGrid.RowHeight = {236, 56, 110, '1x'};
+        controlGrid.RowHeight = {248, 56, 110, '1x'};
         controlGrid.ColumnWidth = {'1x'};
         controlGrid.Padding = [0 0 0 0];
         controlGrid.RowSpacing = 10;
@@ -188,7 +188,7 @@ refreshAll();
         inputPanel.Layout.Column = 2;
         inputGrid = uigridlayout(inputPanel, [6, 3]);
         inputGrid.ColumnWidth = {96, '1x', 74};
-        inputGrid.RowHeight = {36, 36, 36, 36, 36, 36};
+        inputGrid.RowHeight = {38, 38, 38, 38, 38, 38};
 
         rootLabel = uilabel(inputGrid, 'Text', 'Root folder');
         rootLabel.Layout.Row = 1;
