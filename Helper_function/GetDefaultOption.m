@@ -1,5 +1,7 @@
 function option=GetDefaultOption(varagin)
 
+    % Soma-print 2D parameters
+
     option.nitermax=10; % Maximum number of iterations
     option.nitermin=3;  % Minimum number of iterations
     option.n_vec1=15; % 1st iteration
@@ -18,7 +20,8 @@ function option=GetDefaultOption(varagin)
     option.sigma=100;% in um
     option.sigma2=100;% in um
     option.anchorsigma=250; % in um
-    
+
+     % Soma-print 3D parameters
     if exist('varagin')==1 & varagin== 3;
 
         option.nitermax=10; % Maximum number of iterations
