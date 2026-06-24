@@ -31,10 +31,10 @@
 % - 2) Specify the files below or automatically load if your files are named with "invivo" and 'exvivo'; 
 % - 3) then click "Run Section"
 
-invivo_image='Example_data\1_S1350_2P\invivo_S1avg350um_flip_pixellength_1d31.tif';
-exvivo_image='Example_data\1_S1350_2P\exvivo_confocal_max_rotate_crop_scale.tif';
-invivo_ROI = 'Example_data\1_S1350_2P\invivo_all_RoiSet.zip';
-exvivo_ROI='Example_data\1_S1350_2P\exvivo_confocal_all_RoiSet.zip';
+invivo_image=fullfile('Example_data','1_S1350_2P','invivo_S1avg350um_flip_pixellength_1d31.tif');
+exvivo_image=fullfile('Example_data','1_S1350_2P','exvivo_confocal_max_rotate_crop_scale.tif');
+invivo_ROI = fullfile('Example_data','1_S1350_2P','invivo_all_RoiSet.zip');
+exvivo_ROI=fullfile('Example_data','1_S1350_2P','exvivo_confocal_all_RoiSet.zip');
 
 %[invivo_image,exvivo_image,invivo_ROI,exvivo_ROI]=AutoLoadFiles;  % Load automatically 
 
