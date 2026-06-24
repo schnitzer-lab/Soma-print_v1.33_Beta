@@ -8,7 +8,7 @@
 % 1) Tissue cutting is suboptimal
 % 2) Substantial optical aberation is present
 
-% *** You would need Curve Fitting Toolbox for fitting the curved manifold
+% *** You would need [Curve Fitting Toolbox] for fitting the curved manifold
 
 % =======================================================================
 % Schnitzer Lab, Stanford University
