@@ -21,8 +21,11 @@
 % - 3) then click "Run Section"
 
 % Read in vivo image and ROI
-invivo_image='Example_data\4_3D_M1_WangEtAl_Fig2\invivo_M1AVG_190um-zoom2-biColor_flip_in vivo avg-composite_pixellength_1d31.jpg';
-invivo_ROI = 'Example_data\4_3D_M1_WangEtAl_Fig2\invivo_M1AVG_190um-zoom2-biColor_flip_in vivo avg-composite-RoiSet592.zip';
+invivo_image=fullfile('Example_data','4_3D_M1_WangEtAl_Fig2','invivo_M1AVG_190um-zoom2-biColor_flip_in vivo avg-composite_pixellength_1d31.jpg');
+invivo_ROI = fullfile('Example_data','4_3D_M1_WangEtAl_Fig2','invivo_M1AVG_190um-zoom2-biColor_flip_in vivo avg-composite-RoiSet592.zip');
+
+%invivo_image='Example_data\4_3D_M1_WangEtAl_Fig2\invivo_M1AVG_190um-zoom2-biColor_flip_in vivo avg-composite_pixellength_1d31.jpg'; %  Windows only
+%invivo_ROI = 'Example_data\4_3D_M1_WangEtAl_Fig2\invivo_M1AVG_190um-zoom2-biColor_flip_in vivo avg-composite-RoiSet592.zip'; % Windows only
 
 image1=imread(invivo_image);
 [h1,w1]=size(image1); map1=readROI(invivo_ROI,h1,w1);
@@ -37,15 +40,18 @@ centroid1=Somaprint_ComputePeak(map1); % Compute centroid from in vivo maps
 
 n_zstack=22;
 
-filepath='Example_data\4_3D_M1_WangEtAl_Fig2\';
+filepath=fullfile('Example_data','4_3D_M1_WangEtAl_Fig2');
+%filepath='Example_data\4_3D_M1_WangEtAl_Fig2\';
 
 for jjjj=1:n_zstack;
     fprintf(['- Loading Z-stack:',num2str(jjjj),',']);  
     exvivo_image=sprintf('exvivo_Slice2_M1_invivo34_z12_RAW-------rotate4.5_z0%02d.tif', jjjj);%%02d
-    image2{jjjj}=imread([filepath,exvivo_image]); 
+    image2{jjjj}=imread(fullfile(filepath,exvivo_image)); 
+    % image2{jjjj}=imread([filepath,exvivo_image]);  % Windows only
 
     exvivo_ROI=sprintf('exvivo_Slice2_M1_invivo34_z12_RAW-------rotate4.5_z0%02d_c001RoiSet.zip', jjjj);%%02d  
-    [centroid2{jjjj}]=readCentroid([filepath,exvivo_ROI]); % Read centrold only from ImageJ ROIs
+    [centroid2{jjjj}]=readCentroid(fullfile(filepath,exvivo_ROI)); % Read centrold only from ImageJ ROIs
+    %[centroid2{jjjj}]=readCentroid([filepath,exvivo_ROI]); % Windows only
 end
 
 %% ============== Step 3: Transformation w/ one of the ex vivo planes ==============
