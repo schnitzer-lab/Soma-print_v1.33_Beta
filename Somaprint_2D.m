@@ -12,31 +12,33 @@
 % 1) Matched cell IDs
 % 2) Statistics (posterior probability, p-value, likelihood ratio) for all potential matches 
 
-% [***** MATLAB tookbox that you may need] (depending on your MATLAB version, so try install this if some functions are missing)]
-% - Computer Vision Toolbox                             
-% - Image Processing Toolbox                              
-% - Signal Processing Toolbox                            
+% [***** MATLAB tookbox that you may need] (depending on your MATLAB version, so try installing this if some functions are missing)]                          
+                          
+% - Image Processing Toolbox                     
 % - Statistics and Machine Learning Toolbox  
+% - (*)Curve Fitting Toolbox (if you use Somaprint_3D)
+% - (*)Signal Processing Toolbox   
 
 % =======================================================================
 
 % Schnitzer Lab, Stanford University
-% Contact info for technical questions:Xiaochen Sun, xcsun@stanford.edu or TRUFACT.info@gmail.com; 
+% Contact info for technical questions: Xiaochen Sun, xcsun@stanford.edu or TRUFACT.info@gmail.com; 
 
 %% ========  Step 1: Read in images and cell maps ======== 
 
 % [***User action***] 
 % - 0) Always add the entire Soma-print package to your MATLAB search path first
-% - 1) Go to your folder with in vivo & ex vivo ROIs and images
-% - 2) Specify the files below or automatically load if your files are named with "invivo" and 'exvivo'; 
-% - 3) then click "Run Section"
+% - 1) Specify the input files below manually or automatically load your files using AutoLoadFiles (see function below)
+% - 2) then click "Run Section"
 
+% --- Option 1: specify the file names manually --- 
 invivo_image=fullfile('Example_data','1_S1350_2P','invivo_S1avg350um_flip_pixellength_1d31.tif');
 exvivo_image=fullfile('Example_data','1_S1350_2P','exvivo_confocal_max_rotate_crop_scale.tif');
 invivo_ROI = fullfile('Example_data','1_S1350_2P','invivo_all_RoiSet.zip');
 exvivo_ROI=fullfile('Example_data','1_S1350_2P','exvivo_confocal_all_RoiSet.zip');
 
-%[invivo_image,exvivo_image,invivo_ROI,exvivo_ROI]=AutoLoadFiles;  % Load automatically 
+% --- Option 2: Automatically load file names --- 
+% [invivo_image,exvivo_image,invivo_ROI,exvivo_ROI]= AutoLoadFiles;  % Load automatically 
 
 % Generate scaled map2 (ex vivo) and scaled map1 (in vivo)
 [map1,map2,image1,image2]=Somaprint_GenerateMap(invivo_image,exvivo_image,invivo_ROI,exvivo_ROI);
@@ -52,7 +54,7 @@ exvivo_ROI=fullfile('Example_data','1_S1350_2P','exvivo_confocal_all_RoiSet.zip'
 %% Step 3: ========  Soma-print, iterative agorith ======== 
 
 % [***User action***] 
-% - 1) Specificy the pixel size below: option.pixellength
+% - 1) Specify the pixel size below: option.pixellength
 % - 2) Click "Run Section"
 
 option=GetDefaultOption;
@@ -66,8 +68,8 @@ option.pixellength=672/1024;   % *Critical parameter: um / pixel, adjust this ac
 % - Click "Run Section"
 
 figure(1);clf;
-plot_option=1; % Quick ploting with 4 pannels
-%plot_option=2; % Final ploting with 6 pannels
+plot_option=1; % Quick plotting with 4 panels
+%plot_option=2; % Final plotting with 6 panels
 [id_output1,id_output2,output_sumamry]=Somaprint_ComputeMatchStatistics(score_weighted{1,length(score_weighted)},map1,map2_tform,[],[],[],[],plot_option);
 
 % --- Output files: 
