@@ -60,7 +60,7 @@ exvivo_ROI=fullfile('Example_data','1_S1350_2P','exvivo_confocal_all_RoiSet.zip'
 % - 2) Click "Run Section"
 
 option=GetDefaultOption;
-option.pixellength=672/1024;   % *Critical parameter: um / pixel, adjust this according to your in vivo imaging data
+option.pixellength=672/512;   % *Critical parameter: um / pixel, adjust this according to your in vivo imaging data
 
 [score_weighted,id_map1,id_map2,score_raw]=Somaprint_Iterative (map1,map2_tform,option);
 
