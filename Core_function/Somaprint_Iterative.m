@@ -23,7 +23,9 @@ tform=[];
     data_nitermin=option.nitermin;
     data_n_vec1=option.n_vec1; % 1st iteration
     data_n_vec2=option.n_vec2;
-    data_n_vec3=option.n_vec3;
+    if isempty(option.n_vec3)==1;    data_n_vec3=data_n_vec2;
+    else;   data_n_vec3=option.n_vec3;
+    end
     data_p_sum1=option.p_sum1;
     data_p_sum2=option.p_sum2;
     data_method=option.method;
