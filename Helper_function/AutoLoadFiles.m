@@ -1,4 +1,9 @@
 function [invivo_image,exvivo_image,invivo_ROI,exvivo_ROI]=AutoLoadFiles;
+
+    % Automatically load files 
+    % 1) First, you need to go to the specific folder that contains the 4 input files
+    % 2) The 4 files need to be named as "invivo"/"exvivo". tif and .zip
+
     file=dir;
     invivo_image='';
     exvivo_image='';
