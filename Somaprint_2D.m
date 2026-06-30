@@ -4,9 +4,9 @@
 
 % Input: 
 % 1) in vivo images
-% 2) in vivo cell maps (ImageJ ROIs)
+% 2) in vivo cell maps (Fiji/Cellpose ROIs, or EXTRACT spatial cell masks in .mat)
 % 3) ex vivo images
-% 4) ex vivo cell maps (ImageJ ROIs)
+% 4) ex vivo cell maps (Fiji/Cellpose ROIs, or EXTRACT spatial cell masks in .mat)
 
 % Output: 
 % 1) Matched cell IDs
@@ -42,6 +42,8 @@ exvivo_ROI=fullfile('Example_data','1_S1350_2P','exvivo_confocal_all_RoiSet.zip'
 
 % Generate scaled map2 (ex vivo) and scaled map1 (in vivo)
 [map1,map2,image1,image2]=Somaprint_GenerateMap(invivo_image,exvivo_image,invivo_ROI,exvivo_ROI);
+
+% *If your input ROIs are not in .zip from Fiji/Cellpose, transform them into cell mask files in .mat (see variable "map1", as in EXTRACT spatial_weights)
 
 %% ======== Step 2: Select anchor cells for pre-alignment ======== 
 
