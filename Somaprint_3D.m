@@ -6,13 +6,13 @@
 
 % Use Soma-print 3D rather than 2D only when in vivo cells are found across >20 um ex vivo z-planes, due to 
 % 1) Tissue cutting is suboptimal
-% 2) Substantial optical aberation is present
+% 2) Substantial optical aberration is present
 
 % *** You would need [Curve Fitting Toolbox] for fitting the curved manifold
 
 % =======================================================================
 % Schnitzer Lab, Stanford University
-% Contact info for technical questions:Xiaochen Sun, xcsun@stanford.edu or TRUFACT.info@gmail.com; 
+% Contact info for technical questions: Xiaochen Sun, xcsun@stanford.edu or TRUFACT.info@gmail.com; 
 
 %% ============== Step 1: Loading in vivo images and ROIs ========================================
 
@@ -37,7 +37,7 @@ centroid1=Somaprint_ComputePeak(map1); % Compute centroid from in vivo maps
 
 % [***User action***] 
 % - 1) Go to your folder with ex vivo ROIs and images
-% - 2) Specify the files name, number of stacks (n_zstacks)
+% - 2) Specify the file name, number of stacks (n_zstacks)
 % - 3) then click "Run Section"
 
 n_zstack=22;
@@ -74,7 +74,7 @@ end
 
 %% ==============  Step 4: Soma-print for individual planes ============== 
 % [***User action***] 
-% - 1) Specificy the pixel size below: option.pixellength
+% - 1) Specify the pixel size below: option.pixellength
 % - 2) click "Run Section"
 
 option=GetDefaultOption(3); % Choose the parameters optimized for 3D Somaprint 
@@ -89,12 +89,12 @@ end
 %% ==============  Step 5: Check results for individual planes ============== 
 
 % [***User action***] 
-% - 1) Specificy the pixel size below: option.pixellength
+% - 1) Specify the pixel size below: option.pixellength
 % - 2) click "Run Section"
 
 z=15; % Choose the individual plane that you want to see the results
 figure(1);clf;
-[id_output1,id_output2,output_sumamry,output_option]=Somaprint_ComputeMatchStatistics(score_weighted_3D{z}{length(score_weighted_3D{z})},centroid1,centroid2_tform{z},[],[],option.lambda,option.gmmfilter,2);
+[id_output1,id_output2,output_summary,output_option]=Somaprint_ComputeMatchStatistics(score_weighted_3D{z}{length(score_weighted_3D{z})},centroid1,centroid2_tform{z},[],[],option.lambda,option.gmmfilter,2);
 
 %% ==============  Step 6: Processing across Z-stacks ============== 
 
@@ -104,7 +104,7 @@ figure(1);clf;
 % Find optimial z plane based on maximum Soma-print socres; Compute curved manifold
 [id_output3D,data_idz,data_globalmapscore]=Somaprint_Process3DSomaprint(centroid1,centroid2_tform,score_weighted_3D,option.lambda,option.gmmfilter); 
 
-% Reconsturct ex vivo image based on the curved manifold
+% Reconstruct ex vivo image based on the curved manifold
 image_reconstruct=Somaprint_ReconstructCurvedManifold(centroid1,id_output3D,data_idz,image1,image2_tform);
 
 
