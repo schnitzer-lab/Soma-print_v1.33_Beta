@@ -1,5 +1,7 @@
 Welcome to Soma-print 1.33. 
 
+- Current version of Soma-print algorithm used in Wang et al., 2026 (https://www.biorxiv.org/content/10.64898/2026.04.28.719500v1) +  4 example datasets 
+
 - The algorithm is still in its Beta version and under constant development, so please check frequently for future updates (e.g., a Python version will be released later). 
 
 ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- ------- -------
