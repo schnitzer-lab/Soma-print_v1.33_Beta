@@ -22,6 +22,8 @@
 % - 2) Specify the files below: this is an example dataset for 3D Soma-print (WangEtAl., 2026, Figure 2)  
 % - 3) then click "Run Section"
 
+clear;clc;
+
 % Read in vivo image and ROI
 invivo_image=fullfile('Example_data','4_3D_M1_WangEtAl_Fig2','invivo_M1AVG_190um-zoom2-biColor_flip_in vivo avg-composite_pixellength_1d31.jpg');
 invivo_ROI = fullfile('Example_data','4_3D_M1_WangEtAl_Fig2','invivo_M1AVG_190um-zoom2-biColor_flip_in vivo avg-composite-RoiSet592.zip');
