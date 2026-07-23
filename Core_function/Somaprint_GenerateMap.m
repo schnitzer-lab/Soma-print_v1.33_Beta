@@ -44,7 +44,7 @@ image1=imread(invivo_image);
 
 figure(1);clf;
 fprintf('- 1.3) Please wait: now generating images with ROIs .... ... \n')
-subplot(2,1,1);imagesc(normimage(image1));PlotCellOverlay(map1,[0 0.7 0]);colormap('bone')
-subplot(2,1,2);imagesc(normimage(image2));PlotCellOverlay(map2,[.7 0 .7]);colormap('bone')
+subplot(2,1,1);imagesc(normimage(image1));PlotCellOverlay(map1,[0 0.7 0]);colormap('bone');set(gca,'Visible','off');
+subplot(2,1,2);imagesc(normimage(image2));PlotCellOverlay(map2,[.7 0 .7]);colormap('bone');set(gca,'Visible','off');
 
 end
