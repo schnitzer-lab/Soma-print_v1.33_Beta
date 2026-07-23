@@ -29,7 +29,10 @@
 % [***User action***] 
 % - 0) Always add the entire Soma-print package to your MATLAB search path first
 % - 1) Specify the input files below manually or automatically load your files using AutoLoadFiles (see function below)
-% - 2) then click "Run Section"
+% - 2) If running Example data, go to the main folder "Soma-print_v.133_Beta_main"
+% - 3) Then click "Run Section"
+
+clear;clc;
 
 % --- Option 1: specify the file names manually --- 
 invivo_image=fullfile('Example_data','1_S1350_2P','invivo_S1avg350um_flip_pixellength_1d31.tif');
@@ -70,9 +73,8 @@ option.pixellength=672/512;   % *Critical parameter: um / pixel, adjust this acc
 % - Click "Run Section"
 
 figure(1);clf;
-plot_option=1; % Quick plotting with 4 panels
-%plot_option=2; % Final plotting with 6 panels
-[id_output1,id_output2,output_sumamry]=Somaprint_ComputeMatchStatistics(score_weighted{1,length(score_weighted)},map1,map2_tform,[],[],[],[],plot_option);
+plot_option=2; % Final plotting with 6 panels; / plot_option=1; % Quick plotting with 4 panels
+[id_output1,id_output2,output_summary]=Somaprint_ComputeMatchStatistics(score_weighted{1,length(score_weighted)},map1,map2_tform,[],[],[],[],plot_option);
 
 % --- Output files: 
 % 1) id_output1: ID for in vivo cells matched
