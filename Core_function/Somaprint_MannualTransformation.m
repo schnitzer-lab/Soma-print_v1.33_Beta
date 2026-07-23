@@ -25,7 +25,9 @@ function [tform,map2_tform,image2_tform,mp, fp]=Somaprint_MannualTransformation(
     fprintf('- Please wait: generating images with transformed ROIs .... ... \n')
     %subplot(2,2,1);imshowpair(max(map1(:,:,id_cell1),[],3),max(map2(:,:,id_cell2),[],3)); title('Before transformation, anchor cells');
     %subplot(2,2,3);imshowpair(max(map1(:,:,id_cell1),[],3),imwarp(max(map2(:,:,id_cell2),[],3),data_tform,'OutputView',imref2d(size(image2))));title('After transformation, anchor cells')
-    subplot(2,1,1);imshowpair(max(map1(:,:,:),[],3),max(map2(:,:,:),[],3));title('Before transformation, all cells');
+    subplot(2,1,1);imshowpair(imresize(max(map1(:,:,:),[],3),size(map2,1)/size(map1,1)),max(map2(:,:,:),[],3));title('Before transformation, all cells');
+
+    
     subplot(2,1,2);imshowpair(max(map1(:,:,:),[],3),max(map2_tform(:,:,:),[],3));title('After transformation, all cells')
 
 end
