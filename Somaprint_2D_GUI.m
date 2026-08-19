@@ -1,4 +1,4 @@
-function app = Somaprint2D_GUI()
+function app = Somaprint_2D_GUI()
 % Somaprint2D_GUI
 % Wizard-style GUI for the 2D Soma-print workflow.
 
