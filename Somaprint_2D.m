@@ -22,7 +22,7 @@
 % =======================================================================
 
 % Schnitzer Lab, Stanford University
-% Contact info for technical questions: Xiaochen Sun, xcsun@stanford.edu or TRUFACT.info@gmail.com; 
+% Contact info for technical questions: Xiaochen Sun (xcsun@stanford.edu), Lun Wang (wanglun@stanford.edu), or TRUFACT.info@gmail.com; 
 
 %% ========  Step 1: Read in images and cell maps ======== 
 
