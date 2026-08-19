@@ -596,8 +596,14 @@ refreshAll();
         lbl.Layout.Row = row;
         lbl.Layout.Column = labelCol;
 
-        app.paramEdits.(fieldName) = uieditfield(parent, 'numeric', ...
-            'Value', defaultValue, 'LowerLimit', -Inf);
+        if strcmp(fieldName, 'n_vec3')
+            % An empty n_vec3 tells Somaprint_Iterative to reuse n_vec2.
+            app.paramEdits.(fieldName) = uieditfield(parent, 'numeric', ...
+                'Value', defaultValue, 'LowerLimit', -Inf, 'AllowEmpty', 'on');
+        else
+            app.paramEdits.(fieldName) = uieditfield(parent, 'numeric', ...
+                'Value', defaultValue, 'LowerLimit', -Inf);
+        end
         app.paramEdits.(fieldName).Layout.Row = row;
         app.paramEdits.(fieldName).Layout.Column = valueCol;
     end
@@ -969,6 +975,11 @@ refreshAll();
                 continue
             end
             value = ctrl.Value;
+            if strcmp(fieldName, 'n_vec3') && isempty(value)
+                % Preserve the empty value so Somaprint_Iterative uses n_vec2.
+                option.(fieldName) = [];
+                continue
+            end
             if any(strcmp(fieldName, integerFields))
                 value = round(value);
             end
