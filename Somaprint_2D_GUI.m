@@ -598,8 +598,13 @@ refreshAll();
 
         if strcmp(fieldName, 'n_vec3')
             % An empty n_vec3 tells Somaprint_Iterative to reuse n_vec2.
-            app.paramEdits.(fieldName) = uieditfield(parent, 'numeric', ...
-                'Value', defaultValue, 'LowerLimit', -Inf, 'AllowEmpty', 'on');
+            if isempty(defaultValue)
+                displayValue = '';
+            else
+                displayValue = num2str(defaultValue);
+            end
+            app.paramEdits.(fieldName) = uieditfield(parent, 'text', ...
+                'Value', displayValue);
         else
             app.paramEdits.(fieldName) = uieditfield(parent, 'numeric', ...
                 'Value', defaultValue, 'LowerLimit', -Inf);
@@ -975,10 +980,18 @@ refreshAll();
                 continue
             end
             value = ctrl.Value;
-            if strcmp(fieldName, 'n_vec3') && isempty(value)
-                % Preserve the empty value so Somaprint_Iterative uses n_vec2.
-                option.(fieldName) = [];
-                continue
+            if strcmp(fieldName, 'n_vec3')
+                % A blank field tells Somaprint_Iterative to reuse n_vec2.
+                value = strtrim(value);
+                if isempty(value)
+                    option.(fieldName) = [];
+                    continue
+                end
+                value = str2double(value);
+                if ~isscalar(value) || ~isfinite(value)
+                    error('Somaprint:InvalidNVec3', ...
+                        'n_vec3 must be blank or a finite number.');
+                end
             end
             if any(strcmp(fieldName, integerFields))
                 value = round(value);
@@ -987,7 +1000,11 @@ refreshAll();
                 value = max(value, eps);
             end
             option.(fieldName) = value;
-            ctrl.Value = value;
+            if strcmp(fieldName, 'n_vec3')
+                ctrl.Value = num2str(value);
+            else
+                ctrl.Value = value;
+            end
         end
 
         option.nitermin = min(option.nitermin, option.nitermax);
