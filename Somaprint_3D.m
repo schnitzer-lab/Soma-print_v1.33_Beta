@@ -12,7 +12,7 @@
 
 % =======================================================================
 % Schnitzer Lab, Stanford University
-% Contact info for technical questions: Xiaochen Sun, xcsun@stanford.edu or TRUFACT.info@gmail.com; 
+% Contact info for technical questions: Xiaochen Sun (xcsun@stanford.edu), Wang Lun (wanglun@stanford.edu), or TRUFACT.info@gmail.com; 
 
 %% ============== Step 1: Loading in vivo images and ROIs ========================================
 
