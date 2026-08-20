@@ -277,7 +277,7 @@ refreshAll();
         app.logoAxesAlign = uiaxes(cg);
         safeHideAxesToolbar(app.logoAxesAlign);
         app.logoAxesAlign.Layout.Row = 1;
-        renderLogoOnAxes(app.logoAxesAlign);
+        renderLogoOnAxes(app.logoAxesAlign, resolveLogoV134Path());
 
         app.alignInstruction = uitextarea(cg, ...
             'Value', { ...
@@ -373,7 +373,7 @@ refreshAll();
         app.logoAxesSoma = uiaxes(paramRoot);
         safeHideAxesToolbar(app.logoAxesSoma);
         app.logoAxesSoma.Layout.Row = 1;
-        renderLogoOnAxes(app.logoAxesSoma);
+        renderLogoOnAxes(app.logoAxesSoma, resolveLogoV134Path());
 
         app.runSomaprintButton = uibutton(paramRoot, 'push', 'Text', 'Run Soma-print', ...
             'FontWeight', 'bold', ...
