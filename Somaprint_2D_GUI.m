@@ -361,7 +361,7 @@ refreshAll();
         paramPanel = uipanel(grid, 'Title', 'Parameters');
         paramPanel.Layout.Row = [1 3];
         paramPanel.Layout.Column = 1;
-        basicFields = {'pixellength', 'sigma', 'n_vec1', 'n_vec2'};
+        basicFields = {'pixelsize', 'sigma', 'n_vec1', 'n_vec2'};
         optionFields = fieldnames(state.option);
         advancedFields = optionFields(~ismember(optionFields, basicFields));
 
@@ -490,8 +490,9 @@ refreshAll();
         tablePanel.Layout.Column = 1;
         tg = uigridlayout(tablePanel, [1,1]);
         app.matchTable = uitable(tg, ...
-            'ColumnName', {'id_output1', 'id_output2', 'somaprint_score', 'posterior_probability'}, ...
-            'ColumnEditable', false(1,4));
+            'ColumnName', {'id_output1', 'id_output2', 'somaprint_score', 'secondbest', ...
+            'posterior_probability', 'likelihood_ratio', 'p_value'}, ...
+            'ColumnEditable', false(1,7));
 
         exportPanel = uipanel(grid, 'Title', 'Export');
         exportPanel.Layout.Row = 2;
@@ -971,7 +972,7 @@ refreshAll();
         option = GetDefaultOption();
         optionNames = fieldnames(app.paramEdits);
         integerFields = {'nitermax', 'nitermin', 'n_vec1', 'n_vec2', 'n_vec3', 'method'};
-        positiveFields = {'nitermax', 'nitermin', 'n_vec1', 'n_vec2', 'n_vec3', 'pixellength'};
+        positiveFields = {'nitermax', 'nitermin', 'n_vec1', 'n_vec2', 'n_vec3', 'pixelsize'};
 
         for idx = 1:numel(optionNames)
             fieldName = optionNames{idx};
@@ -1209,9 +1210,9 @@ refreshAll();
                 filePath = fullfile(state.outputFolder, 'output_summary.csv');
                 outputSummary = state.inspect.outputSummary;
                 T = table(outputSummary(:,1), outputSummary(:,2), outputSummary(:,3), ...
-                    outputSummary(:,4), outputSummary(:,5), outputSummary(:,6), ...
+                    outputSummary(:,4), outputSummary(:,5), outputSummary(:,6), outputSummary(:,7), ...
                     'VariableNames', {'invivo_cell_id', 'exvivo_cell_id', 'somaprint_score', ...
-                    'posterior_probability', 'likelihood_ratio', 'p_value'});
+                    'secondbest', 'posterior_probability', 'likelihood_ratio', 'p_value'});
                 writetable(T, filePath);
         end
         setStatus(['Exported ', upper(fmt), ' to ', filePath]);
@@ -1419,7 +1420,7 @@ refreshAll();
         app.exportFullMatButton.Enable = onOff(state.inspect.isReady);
         app.exportCsvButton.Enable = onOff(state.inspect.isReady);
         if ~state.inspect.isReady
-            app.matchTable.Data = cell(0,4);
+            app.matchTable.Data = cell(0,7);
             app.inspectSummaryLabel.Text = 'No inspection results yet.';
             app.inspectStatus.Value = {'Step 4 populates automatically from the final Soma-print iteration.'};
             clearInspectionAxes();
@@ -1458,9 +1459,9 @@ refreshAll();
 
     function tableData = buildMatchTableData()
         nMatched = numel(state.inspect.id1);
-        tableData = num2cell(nan(nMatched, 4));
+        tableData = num2cell(nan(nMatched, 7));
         if nMatched == 0
-            tableData = cell(0, 4);
+            tableData = cell(0, 7);
             return
         end
         outputSummary = state.inspect.outputSummary;
@@ -1473,9 +1474,9 @@ refreshAll();
         for idx = 1:nMatched
             rowIdx = find(outputSummary(:,1) == state.inspect.id1(idx) & outputSummary(:,2) == state.inspect.id2(idx), 1);
             if isempty(rowIdx)
-                tableData(idx, :) = {state.inspect.id1(idx), state.inspect.id2(idx), NaN, NaN};
+                tableData(idx, :) = {state.inspect.id1(idx), state.inspect.id2(idx), NaN, NaN, NaN, NaN, NaN};
             else
-                rowData = num2cell(outputSummary(rowIdx, 1:4));
+                rowData = num2cell(outputSummary(rowIdx, 1:7));
                 tableData(idx, :) = rowData;
             end
         end
@@ -1808,7 +1809,6 @@ refreshAll();
         if ~isnan(cutoff)
             line(ax, [mean(cutoff), mean(cutoff)], yl, 'LineStyle', '--', 'Color', [.3 .3 .3], 'LineWidth', lw);
         end
-        line(ax, [0 maxLine], [0 maxLine], 'LineStyle', '--', 'Color', [.6 .6 .6], 'LineWidth', lw);
         xlim(ax, [0 maxLine]);
         ylim(ax, yl);
         set(ax, 'FontSize', fontsize, 'Box', 'off', 'LineWidth', lw);
@@ -2105,8 +2105,8 @@ refreshAll();
 
     function labelText = optionLabel(fieldName)
         switch fieldName
-            case 'pixellength'
-                labelText = 'pixellength';
+    case 'pixelsize'
+        labelText = 'pixelsize';
             case 'sigma'
                 labelText = 'sigma1';
             otherwise

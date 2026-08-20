@@ -76,11 +76,11 @@ end
 
 %% ==============  Step 4: Soma-print for individual planes ============== 
 % [***User action***] 
-% - 1) Specify the pixel size below: option.pixellength
+% - 1) Specify the pixel size below: option.pixelsize
 % - 2) click "Run Section"
 
 option=GetDefaultOption(3); % Choose the parameters optimized for 3D Somaprint 
-option.pixellength=672/512;  % *Critical parameter: um / pixel, adjust this according to your in vivo imaging data
+option.pixelsize=672/512;  % *Critical parameter: um / pixel, adjust this according to your in vivo imaging data
 
 for jjjj=1:length(centroid2_tform);
   if isempty(centroid2_tform{jjjj})==1;continue;end
@@ -91,7 +91,7 @@ end
 %% ==============  Step 5: Check results for individual planes ============== 
 
 % [***User action***] 
-% - 1) Specify the pixel size below: option.pixellength
+% - 1) Specify the pixel size below: option.pixelsize
 % - 2) click "Run Section"
 
 z=15; % Choose the individual plane that you want to see the results
