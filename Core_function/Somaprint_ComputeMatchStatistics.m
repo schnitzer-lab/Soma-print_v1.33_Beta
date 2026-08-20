@@ -289,13 +289,13 @@ fprintf(['- Computing statistics, fitting Gaussian and Mixture Gaussian models..
             return
         end
         
-    
         output_sumamry(:,1)=id_cell1;
         output_sumamry(:,2)=id_cell2;
         output_sumamry(:,3)=score;
-        output_sumamry(:,4)=PosteriorProbability_func(score');   
-        output_sumamry(:,5)=LikelihoodRatio_func(score);
-        output_sumamry(:,6)=pvalue_func(score);
+        output_sumamry(:,4)=secondbest;
+        output_sumamry(:,5)=PosteriorProbability_func(score');   
+        output_sumamry(:,6)=LikelihoodRatio_func(score);
+        output_sumamry(:,7)=pvalue_func(score);
         
         p_cutoff=0.05;
         id_stats=6;id_output1_pv=output_sumamry(find(output_sumamry(:,id_stats)<p_cutoff),1);id_output2_pv=output_sumamry(find(output_sumamry(:,id_stats)<p_cutoff),2);
