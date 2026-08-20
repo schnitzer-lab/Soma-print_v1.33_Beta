@@ -2,7 +2,7 @@ function option=GetDefaultOption(varagin)
 
     % Soma-print 2D parameters
 
-    option.pixellength=1.31; % Critical parameters, pixel size for in vivo image (um/pixel) 
+    option.pixelsize=1.31; % Critical parameters, pixel size for in vivo image (um/pixel) 
 
     option.nitermax=10; % Maximum number of iterations
     option.nitermin=3;  % Minimum number of iterations
@@ -24,7 +24,7 @@ function option=GetDefaultOption(varagin)
      % Soma-print 3D parameters
     if exist('varagin')==1 & varagin== 3;
 
-        option.pixellength=0.66; % Critical parameters 
+        option.pixelsize=0.66; % Critical parameters 
 
         option.nitermax=10; % Maximum number of iterations
         option.nitermin=3;  % Minimum number of iterations
