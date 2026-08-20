@@ -542,7 +542,7 @@ refreshAll();
         lg2.Padding = [6 6 6 6];
         app.logoAxesInspect = uiaxes(lg2);
         safeHideAxesToolbar(app.logoAxesInspect);
-        renderLogoOnAxes(app.logoAxesInspect);
+        renderLogoOnAxes(app.logoAxesInspect, resolveLogoV134Path());
     end
 
     function buildFooter(parent)
@@ -615,7 +615,7 @@ refreshAll();
     end
 
     function renderLogo()
-        logoPath = resolveLogoPath();
+        logoPath = resolveLogoV134Path();
         renderLogoOnAxes(app.logoAxes, logoPath);
     end
 
@@ -654,6 +654,15 @@ refreshAll();
             logoPath = secondaryPath;
         else
             logoPath = fallbackPath;
+        end
+    end
+
+    function logoPath = resolveLogoV134Path()
+        preferredPath = fullfile(pkgRoot, 'Documents', 'Logo_v1.34.png');
+        if exist(preferredPath, 'file')
+            logoPath = preferredPath;
+        else
+            logoPath = resolveLogoPath();
         end
     end
 
