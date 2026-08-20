@@ -34,9 +34,9 @@ tform=[];
     data_lambda=option.lambda;  
     data_gmmfilter=option.gmmfilter;
 
-    data_sigma=option.sigma / option.pixellength;
-    data_sigma2=option.sigma2 / option.pixellength;
-    data_anchorsigma=option.anchorsigma / option.pixellength;
+    data_sigma=option.sigma / option.pixelsize;
+    data_sigma2=option.sigma2 / option.pixelsize;
+    data_anchorsigma=option.anchorsigma / option.pixelsize;
     data_foldexvivo=option.foldexvivo;
 
     [h1,w1,n1]=size(map1);[temp,temp,n2]=size(map2_tform);
